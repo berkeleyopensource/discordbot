@@ -1,2 +1,2 @@
 # discordbot
-Discord Bot for the Berkeley EECS Server
+Discord Bot for the Berkeley EECS Discord server
