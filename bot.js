@@ -11,7 +11,6 @@ const Discord = require('discord.js')
 const client = new Discord.Client()
 
 client.once('ready', () => {
-    client.user.set
     console.log('bot active!')
 })
 
@@ -49,8 +48,8 @@ function roleMessages(message) {
         }
     }
     Promise.all([createRoleMessage("EECS Lower Division", EECS_LOWER_DIV),
-    createRoleMessage("CS Lower Division", CS_UPPER_DIV),
-    createRoleMessage("EE Lower Division", EE_UPPER_DIV)])
+    createRoleMessage("CS Upper Division", CS_UPPER_DIV),
+    createRoleMessage("EE Upper Division", EE_UPPER_DIV)])
 }
 
 function react_to_role(guild, react_name) {
