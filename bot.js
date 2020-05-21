@@ -125,7 +125,8 @@ function isMod(userID) {
 
 function generateCode() {
     now = new Date()
-    return now.getTime() % 1000000
+    code = now.getTime() % 1000000
+    return code < 1000000 ? code + 1000000 : code
 }
 
 function queueCode(message, code) {
