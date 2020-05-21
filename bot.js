@@ -8,6 +8,7 @@ const CS_UPPER_DIV = CLASS_TO_ROLE.CSUD
 const EE_UPPER_DIV = CLASS_TO_ROLE.EEUD
 var GUILD
 var VERIFIED_ROLE
+var ADMIN_ROLE
 var MESSAGE_IDS = []
 
 const nodemailer = require('nodemailer')
@@ -24,7 +25,9 @@ module.exports = {
     generateCode: generateCode,
     queueCode: queueCode,
     verifyCode: verifyCode,
-    isVerified: isVerified
+    isVerified: isVerified,
+    isMod: isMod,
+    roleMessages: roleMessages
 }
 
 const Discord = require('discord.js')
@@ -49,6 +52,8 @@ client.once('ready', () => {
     console.log('bot active!')
     GUILD = client.guilds.resolve('485517971452854272')
     VERIFIED_ROLE = GUILD.roles.cache.find(role => role.name === 'Verified')
+    ADMIN_ROLE = GUILD.roles.cache.find(role => role.name === 'mod monkey')
+
 })
 
 client.login(TOKEN)
@@ -112,6 +117,10 @@ function isMember(userID) {
 
 function isVerified(userID) {
     return GUILD.members.resolve(userID).roles.cache.has(VERIFIED_ROLE.id)
+}
+
+function isMod(userID) {
+    return GUILD.members.resolve(userID).roles.cache.has(ADMIN_ROLE.id)
 }
 
 function generateCode() {
