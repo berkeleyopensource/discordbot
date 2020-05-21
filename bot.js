@@ -124,10 +124,8 @@ function isMod(userID) {
 }
 
 function generateCode() {
-    for (i = 0; i < (Math.random() * 100) + 1; i++) {
-        Math.random()
-    }
-    return Math.floor(100000 + Math.random() * 900000)
+    now = new Date()
+    return now.getTime() % 1000000
 }
 
 function queueCode(message, code) {
@@ -138,7 +136,7 @@ function queueCode(message, code) {
         code = verifications.get(userTag)
         if (code) console.log(`User ${message.author.tag} deleted from queue`)
         verifications.delete(userTag)
-    }, 30000)
+    }, 300000)
 }
 
 async function verifyCode(message, code) {

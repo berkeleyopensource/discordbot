@@ -17,7 +17,7 @@ module.exports = {
             from: config.EMAIL_USER,
             to: args[0],
             subject: 'EECS Discord Verification Code',
-            text: `Please use the code ${code} to complete your verification.\nThis code will expire in two minutes.`
+            text: `Please use the code ${code} to complete your verification.\nThis code will expire in five minutes.`
         }
         try {
             await bot.transporter.sendMail(info)
