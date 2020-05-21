@@ -1,4 +1,4 @@
-module.exports = {
+export default {
     name: 'foo',
     description: 'foo test command',
     execute (message, args) {

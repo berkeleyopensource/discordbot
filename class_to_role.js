@@ -1,6 +1,6 @@
 export default {
     "LD": {
-        "8": "CS 8",
+        "8_": "CS 8",
         "10": "CS 10",
         "16a": "EECS 16A",
         "16b": "EECS16B",

@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "Discord Bot for the Berkeley EECS Discord server",
   "main": "bot.js",
+  "type": "module",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },

@@ -1,4 +1,4 @@
-const fs = require('fs')
+import fs from 'fs'
 const {PREFIX, TOKEN, EMAIL_USER, EMAIL_PASS} = JSON.parse(fs.readFileSync("config.json"))
 const verifications = new Map()
 
@@ -8,7 +8,7 @@ var VERIFIED_ROLE
 var ADMIN_ROLE
 var MESSAGE_IDS = []
 
-const nodemailer = require('nodemailer')
+import nodemailer from 'nodemailer'
 const transporter = nodemailer.createTransport({
     service: 'gmail',
     auth: {
@@ -17,7 +17,7 @@ const transporter = nodemailer.createTransport({
     }
 })
 
-module.exports = {
+export default {
     transporter: transporter,
     generateCode: generateCode,
     queueCode: queueCode,
@@ -27,23 +27,17 @@ module.exports = {
     roleMessages: roleMessages
 }
 
-const Discord = require('discord.js')
+import Discord from 'discord.js'
 const client = new Discord.Client()
 
 client.dmCmds = new Discord.Collection()
-const dmCommandFiles = fs.readdirSync('./dm_commands').filter(file => file.endsWith('.js'))
-for (const file of dmCommandFiles) {
-    const cmd = require(`./dm_commands/${file}`)
-    client.dmCmds.set(cmd.name, cmd)
-}
+import dm_commands from './dm_commands/commands.js'
+dm_commands.forEach(cmd => client.dmCmds.set(cmd.name, cmd))
 console.log('dm_commands loaded')
 client.regCmds = new Discord.Collection()
-const regCommandFiles = fs.readdirSync('./regular_commands').filter(file => file.endsWith('.js'))
-for (const file of regCommandFiles) {
-    const cmd = require(`./regular_commands/${file}`)
-    client.regCmds.set(cmd.name, cmd)
-}
-console.log('regular_commands loaded')
+import reg_commands from './reg_commands/commands.js'
+reg_commands.forEach(cmd => client.regCmds.set(cmd.name, cmd))
+console.log('reg_commands loaded')
 
 client.once('ready', () => {
     console.log('bot active!')
@@ -121,8 +115,7 @@ function isMod(userID) {
 }
 
 function generateCode() {
-    now = new Date()
-    code = now.getTime() % 1000000
+    let code = new Date().getTime() % 1000000
     return code < 1000000 ? code + 1000000 : code
 }
 
@@ -188,7 +181,7 @@ function roleMessages(message) {
             }
             return raw(a) - raw(b)
         }
-        for (emojiName of Object.keys(class_to_role).sort(rawComparator)) {
+        for (let emojiName of Object.keys(class_to_role).sort(rawComparator)) {
             try {
                 const emoji = message.guild.emojis.cache.find(emoji => emoji.name === emojiName)
                 await selectionMessage.react(emoji.id)
@@ -197,17 +190,15 @@ function roleMessages(message) {
             }
         }
     }
-
     Promise.all([
       createRoleMessage("EECS Lower Division", CLASS_TO_ROLE.LD),
       createRoleMessage("CS Upper Division", CLASS_TO_ROLE.CSUD),
       createRoleMessage("EE Upper Division", CLASS_TO_ROLE.EEUD),
-    ]);
-    
+    ])
 }
 
 function react_to_role(guild, react_name) {
-    for (d in CLASS_TO_ROLE) {
+    for (let d in CLASS_TO_ROLE) {
         const division = CLASS_TO_ROLE[d]
         if (Object.keys(division).includes(react_name)) {
             return guild.roles.cache.find(role => role.name === division[react_name])
