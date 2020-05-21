@@ -2,10 +2,8 @@ const fs = require('fs')
 const {PREFIX, TOKEN, EMAIL_USER, EMAIL_PASS} = JSON.parse(fs.readFileSync("config.json"))
 const verifications = new Map()
 
-const CLASS_TO_ROLE = JSON.parse(fs.readFileSync("class_to_role.json"))
-const EECS_LOWER_DIV = CLASS_TO_ROLE.LD
-const CS_UPPER_DIV = CLASS_TO_ROLE.CSUD
-const EE_UPPER_DIV = CLASS_TO_ROLE.EEUD
+import CLASS_TO_ROLE from './data/class_to_role'
+
 var GUILD
 var VERIFIED_ROLE
 var ADMIN_ROLE
@@ -200,9 +198,12 @@ function roleMessages(message) {
             }
         }
     }
-    Promise.all([createRoleMessage("EECS Lower Division", EECS_LOWER_DIV),
-    createRoleMessage("CS Upper Division", CS_UPPER_DIV),
-    createRoleMessage("EE Upper Division", EE_UPPER_DIV)])
+    
+    Promise.all([
+        createRoleMessage("EECS Lower Division", CLASS_TO_ROLE.LD),
+        createRoleMessage("CS Upper Division", CLASS_TO_ROLE.CSUD),
+        createRoleMessage("EE Upper Division", CLASS_TO_ROLE.EEUD),
+    ])
 }
 
 function react_to_role(guild, react_name) {
