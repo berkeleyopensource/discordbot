@@ -4,8 +4,8 @@ export default {
     description: 'get stock info',
     async execute (message, args) {
         try {
-            const j = await fetch(`https://finnhub.io/api/v1/quote?symbol=${args[0]}&token=br3eovvrh5rai6tgh99g`)
-            const s = await j.json()
+            const j = await (await fetch(`https://finnhub.io/api/v1/quote?symbol=${args[0].toUpperCase()}&token=br3eovvrh5rai6tgh99g`)).text()
+            const s = JSON.parse(j)
             let ret = `Symbol: ${args[0].toUpperCase()}
             Current Price: $${s['c']}
             Today's Open: $${s['o']}
