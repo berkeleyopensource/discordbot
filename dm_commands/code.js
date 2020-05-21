@@ -1,6 +1,6 @@
-const Discord = require('discord.js')
-const bot = require('../bot.js')
-module.exports = {
+import Discord from 'discord.js'
+import bot from '../bot.js'
+export default {
     name: 'code',
     description: 'submits code for verification',
     args: true,

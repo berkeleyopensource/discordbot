@@ -1,7 +1,9 @@
-const Discord = require('discord.js')
-const bot = require('../bot.js')
-const config = require('../config.json')
-module.exports = {
+
+import fs from 'fs'
+const {EMAIL_USER} = JSON.parse(fs.readFileSync("config.json"))
+import Discord from 'discord.js'
+import bot from '../bot.js'
+export default {
     name: 'email',
     description: 'submits email for verification',
     args: true,
@@ -14,7 +16,7 @@ module.exports = {
         if (!emailMatch.test(args[0])) return message.channel.send('> Please enter a valid Berkeley email')
         const code = bot.generateCode()
         var info = {
-            from: config.EMAIL_USER,
+            from: EMAIL_USER,
             to: args[0],
             subject: 'EECS Discord Verification Code',
             text: `Please use the code ${code} to complete your verification.\nThis code will expire in five minutes.`

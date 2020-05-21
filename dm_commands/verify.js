@@ -1,5 +1,5 @@
-const Discord = require('discord.js')
-module.exports = {
+import Discord from 'discord.js'
+export default {
     name: 'verify',
     description: 'instructions for verification',
     args: false,
