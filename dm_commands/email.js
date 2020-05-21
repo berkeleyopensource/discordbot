@@ -12,10 +12,10 @@ export default {
     cooldown: 15,
     async execute(message, args) {
         if (bot.isVerified(message.author.id)) return message.channel.send(`> User ${message.author.tag} is already verified.`)
-        const emailMatch = /^[A-z0-9._%+-]+@berkeley\.edu$/
-        if (!emailMatch.test(args[0])) return message.channel.send('> Please enter a valid Berkeley email')
+        const regex = /^[A-z0-9._%+-]+@berkeley\.edu$/
+        if (!regex.test(args[0])) return message.channel.send('> Please enter a valid Berkeley email')
         const code = bot.generateCode()
-        var info = {
+        const info = {
             from: EMAIL_USER,
             to: args[0],
             subject: 'EECS Discord Verification Code',

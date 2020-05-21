@@ -6,7 +6,7 @@ import CLASS_TO_ROLE from "./class_to_role.js"
 var GUILD
 var VERIFIED_ROLE
 var ADMIN_ROLE
-var MESSAGE_IDS = []
+const MESSAGE_IDS = []
 
 import nodemailer from 'nodemailer'
 const transporter = nodemailer.createTransport({
@@ -44,7 +44,6 @@ client.once('ready', () => {
     GUILD = client.guilds.resolve('485517971452854272')
     VERIFIED_ROLE = GUILD.roles.cache.find(role => role.name === 'Verified')
     ADMIN_ROLE = GUILD.roles.cache.find(role => role.name === 'mod monkey')
-
 })
 
 client.login(TOKEN)
@@ -115,7 +114,7 @@ function isMod(userID) {
 }
 
 function generateCode() {
-    let code = new Date().getTime() % 1000000
+    const code = new Date().getTime() % 1000000
     return code < 1000000 ? code + 1000000 : code
 }
 
