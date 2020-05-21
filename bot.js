@@ -138,7 +138,7 @@ function queueCode(message, code) {
         code = verifications.get(userTag)
         if (code) console.log(`User ${message.author.tag} deleted from queue`)
         verifications.delete(userTag)
-    }, 30000)
+    }, 300000)
 }
 
 async function verifyCode(message, code) {
