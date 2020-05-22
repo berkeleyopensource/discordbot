@@ -29,6 +29,7 @@ export default {
 
 import Discord from 'discord.js'
 const client = new Discord.Client()
+const cooldowns = new Discord.Collection()
 
 client.dmCmds = new Discord.Collection()
 import dm_commands from './dm_commands/commands.js'
@@ -66,7 +67,8 @@ function dmCommand(message, commandName, args) {
     if (!client.dmCmds.has(commandName)) return
     console.log(`${message.author.tag} (${message.channel.type}): ${PREFIX + commandName} ${args.join(' ')}`)
     const command = client.dmCmds.get(commandName)
-    if (verifyCommandArgs(command, args, message)) return
+    if (verifyCommandArgs(message, command, args)) return
+    if (updateCooldowns(message, command)) return
     try {
         command.execute(message, args)
     } catch (error) {
@@ -79,7 +81,8 @@ function regCommand(message, commandName, args) {
     if (!client.regCmds.has(commandName)) return
     console.log(`${message.author.tag} (${message.channel.type}): ${PREFIX + commandName} ${args.join(' ')}`)
     const command = client.regCmds.get(commandName)
-    if (verifyCommandArgs(command, args, message)) return
+    if (verifyCommandArgs(message, command, args)) return
+    if (updateCooldowns(message, command)) return
     try {
         command.execute(message, args)
     } catch (error) {
@@ -88,7 +91,7 @@ function regCommand(message, commandName, args) {
     }
 }
 
-function verifyCommandArgs(command, args, message) {
+function verifyCommandArgs(message, command, args) {
     if (!command.flexargs && command.args) {
         if (args.length != command.numArgs) {
             let reply = '> Improper arguments provided!'
@@ -98,6 +101,26 @@ function verifyCommandArgs(command, args, message) {
             return message.channel.send(reply)
         }
     }
+    return null
+}
+
+function updateCooldowns(message, command) {
+    if (!cooldowns.has(command.name)) cooldowns.set(command.name, new Discord.Collection())
+    const now = Date.now()
+    const timestamps = cooldowns.get(command.name)
+    const cooldownTime = (command.cooldown || 1) * 1000
+    if (timestamps.has(message.author.id)) {
+        const expirationTime = timestamps.get(message.author.id) + cooldownTime
+        if (now < expirationTime) {
+            const secondsLeft = (expirationTime - now) / 1000
+            return message.author.send(`> Please wait ${secondsLeft.toFixed(1)} seconds before reusing \`${command.name}\``)
+        }
+    }
+    timestamps.set(message.author.id, now)
+    setTimeout(() => {
+        timestamps.delete(message.author.id)
+        console.log(`${message.author.tag} >${command.name} cd refreshed`)
+    }, cooldownTime)
     return null
 }
 
