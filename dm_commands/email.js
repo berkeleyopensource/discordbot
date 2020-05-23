@@ -1,6 +1,4 @@
-import fs from 'fs'
 import Discord from 'discord.js'
-const {EMAIL_USER} = JSON.parse(fs.readFileSync("config.json"))
 export default {
     name: 'email',
     description: 'submits email for verification',
@@ -15,7 +13,7 @@ export default {
         if (!regex.test(args[0])) return message.channel.send('> Please enter a valid Berkeley email')
         const code = bot.generateCode()
         const info = {
-            from: EMAIL_USER,
+            from: bot.EMAIL_USER,
             to: args[0],
             subject: 'EECS Discord Verification Code',
             text: `Please use the code ${code} to complete your verification.\nThis code will expire in five minutes.`
@@ -33,7 +31,7 @@ export default {
             .setTitle('Email Received')
             .setDescription(`Verification code successfully sent to \`${args[0]}\`\n\n` +
                 'Once you receive your temporary verification code, please verify using\n' +
-                '\`>code [verification code]\`')
+                `\`${bot.PREFIX}code [verification code]\``)
         return message.channel.send(embed)
     }
 }

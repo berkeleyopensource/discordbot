@@ -30,6 +30,8 @@ class BotCommands {
               pass: EMAIL_PASS
             }
         })
+        this.PREFIX = PREFIX
+        this.EMAIL_USER = EMAIL_USER
     }
 
     dmCommand(message, commandName, args) {

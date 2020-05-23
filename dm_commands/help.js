@@ -1,6 +1,4 @@
-import fs from 'fs'
 import Discord from 'discord.js'
-const {PREFIX} = JSON.parse(fs.readFileSync("config.json"))
 export default {
     name: 'help',
     description: 'help for possible commands',
@@ -20,7 +18,7 @@ export default {
                 .setTitle(`\`${args[0]}\``)
                 .addFields(
                     { name: 'Description:', value: command.description },
-                    { name: 'Usage:', value: `\`${PREFIX}${command.name}${command.usage ? ` ${command.usage}` : ''}\`` }
+                    { name: 'Usage:', value: `\`${bot.PREFIX}${command.name}${command.usage ? ` ${command.usage}` : ''}\`` }
                 )
             return message.author.send(embed)
         } else {
@@ -31,7 +29,7 @@ export default {
             const embed = new Discord.MessageEmbed()
                 .setColor('fdb515')
                 .setTitle('Help')
-                .setDescription(`Use \`${PREFIX}help [command name]\` for help on a specific command.`)
+                .setDescription(`Use \`${bot.PREFIX}help [command name]\` for help on a specific command.`)
                 .addFields(
                     { name: 'Available DM Commands:', value: dm_cmds },
                     { name: 'Available Server Commands:', value: server_cmds }
