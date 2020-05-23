@@ -3,7 +3,7 @@ export default {
     name: 'verify',
     description: 'instructions for verification',
     args: false,
-    execute(message, args) {
+    execute(message, args, bot) {
         const embed = new Discord.MessageEmbed()
             .setColor('#fdb515')
             .setTitle('Verification')

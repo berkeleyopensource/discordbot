@@ -1,12 +1,11 @@
 import Discord from 'discord.js'
-import bot from '../bot.js'
 export default {
     name: 'code',
     description: 'submits code for verification',
     args: true,
     numArgs: 1,
     usage: '[code]',
-    async execute (message, args) {
+    async execute (message, args, bot) {
         if (bot.isVerified(message.author.id)) return message.channel.send(`> User ${message.author.tag} is already verified.`)
         if (isNaN(args[0])) return message.channel.send('> Please enter a valid code')
         if (await bot.verifyCode(message, args[0])) {

@@ -1,8 +1,6 @@
-
 import fs from 'fs'
-const {EMAIL_USER} = JSON.parse(fs.readFileSync("config.json"))
 import Discord from 'discord.js'
-import bot from '../bot.js'
+const {EMAIL_USER} = JSON.parse(fs.readFileSync("config.json"))
 export default {
     name: 'email',
     description: 'submits email for verification',
@@ -10,7 +8,7 @@ export default {
     numArgs: 1,
     usage: '[email]',
     cooldown: 15,
-    async execute(message, args) {
+    async execute(message, args, bot) {
         if (bot.isVerified(message.author.id)) return message.channel.send(`> User ${message.author.tag} is already verified.`)
         const regex = /^[A-z0-9._%+-]+@berkeley\.edu$/
         if (!regex.test(args[0])) return message.channel.send('> Please enter a valid Berkeley email')
