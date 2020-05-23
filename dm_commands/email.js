@@ -7,6 +7,7 @@ export default {
     args: true,
     numArgs: 1,
     usage: '[email]',
+    hide: true,
     cooldown: 15,
     async execute(message, args, bot) {
         if (bot.isVerified(message.author.id)) return message.channel.send(`> User ${message.author.tag} is already verified.`)

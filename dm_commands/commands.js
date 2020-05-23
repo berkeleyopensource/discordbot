@@ -1,9 +1,11 @@
-import verify from './verify.js'
-import email from './email.js'
+import help from './help.js'
 import code from './code.js'
+import email from './email.js'
+import verify from './verify.js'
 
 export default [
-    verify,
+    help,
+    code,
     email,
-    code
+    verify
 ]

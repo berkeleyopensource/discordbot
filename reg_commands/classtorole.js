@@ -1,8 +1,9 @@
 export default {
     name: 'classtorole',
-    description: 'temp role',
+    description: 'temporary command',
+    hide: true,
     execute(message, args, bot) {
         if (!bot.isMod(message.author.id)) return
-        bot.roleMessages(message)
+        return bot.roleMessages(message)
     }
 }

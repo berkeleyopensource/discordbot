@@ -33,7 +33,7 @@ class BotCommands {
     }
 
     dmCommand(message, commandName, args) {
-        if (!this.isMember(message.author.id)) return message.channel.send(`> Please join the EECS Discord server before using any commands`)
+        if (!this.isMember(message.author.id)) return message.channel.send('> Please join the EECS Discord server before using any commands')
         if (!client.dmCmds.has(commandName)) return
         console.log(`${message.author.tag} (${message.channel.type}): ${PREFIX + commandName} ${args.join(' ')}`)
         const command = client.dmCmds.get(commandName)
@@ -62,7 +62,7 @@ class BotCommands {
     }
 
     verifyCommandArgs(message, command, args) {
-        if (!command.flexargs && command.args) {
+        if (!command.flexArgs && command.args) {
             if (args.length != command.numArgs) {
                 let reply = '> Improper arguments provided!'
                 if (command.usage) {
@@ -129,7 +129,7 @@ class BotCommands {
             return false
         }
         if (verifications.get(userTag) != code) {
-            message.channel.send(`> Incorrect verification code`)
+            message.channel.send('> Incorrect verification code')
             return false
         }
         verifications.delete(userTag)
