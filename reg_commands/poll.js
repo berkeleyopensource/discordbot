@@ -7,18 +7,7 @@ export default {
     usage: '{[question]} {[poll item 1]} {[poll item 2]} ...',
     cooldown: 10,
     async execute(message, args, bot) {
-        let emojis = [
-            '0⃣',
-            '1⃣',
-            '2⃣',
-            '3⃣',
-            '4⃣',
-            '5⃣',
-            '6⃣',
-            '7⃣',
-            '8⃣',
-            '9⃣'
-        ]
+        let emojis = ['0⃣', '1⃣', '2⃣', '3⃣', '4⃣', '5⃣', '6⃣', '7⃣', '8⃣', '9⃣']
         const pollItems = message.content.slice(bot.PREFIX.length + 5).split(/\s+(?={)/)
         const question = pollItems.shift().slice(1, -1)
         if (pollItems.length > 10) return message.author.send('Poll value limit is 10')

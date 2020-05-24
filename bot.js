@@ -12,14 +12,21 @@ const verifications = new Map()
 const client = new Discord.Client()
 const cooldowns = new Discord.Collection()
 
+console.log('loading commands\n')
 client.dmCmds = new Discord.Collection()
 import dm_commands from './dm_commands/commands.js'
-dm_commands.forEach(cmd => client.dmCmds.set(cmd.name, cmd))
-console.log('dm_commands loaded')
+dm_commands.forEach(cmd => {
+    client.dmCmds.set(cmd.name, cmd)
+    console.log('\x1b[36m%s\x1b[0m', `${cmd.name}.js loaded`)
+})
+console.log('dm_commands loaded\n')
 client.regCmds = new Discord.Collection()
 import reg_commands from './reg_commands/commands.js'
-reg_commands.forEach(cmd => client.regCmds.set(cmd.name, cmd))
-console.log('reg_commands loaded')
+reg_commands.forEach(cmd => {
+    client.regCmds.set(cmd.name, cmd)
+    console.log('\x1b[36m%s\x1b[0m', `${cmd.name}.js loaded`)
+})
+console.log('reg_commands loaded\n')
 
 class BotCommands {
     constructor () {
@@ -37,7 +44,7 @@ class BotCommands {
     dmCommand(message, commandName, args) {
         if (!this.isMember(message.author.id)) return message.channel.send('> Please join the EECS Discord server before using any commands')
         if (!client.dmCmds.has(commandName)) return
-        console.log(`${message.author.tag} (${message.channel.type}): ${PREFIX + commandName} ${args.join(' ')}`)
+        console.log('\x1b[36m%s\x1b[0m', `${message.author.tag} (${message.channel.type}): ${PREFIX + commandName} ${args.join(' ')}`)
         const command = client.dmCmds.get(commandName)
         if (this.verifyCommandArgs(message, command, args)) return
         if (this.updateCooldowns(message, command)) return
@@ -51,7 +58,7 @@ class BotCommands {
 
     regCommand(message, commandName, args) {
         if (!client.regCmds.has(commandName)) return
-        console.log(`${message.author.tag} (${message.channel.type}): ${PREFIX + commandName} ${args.join(' ')}`)
+        console.log('\x1b[36m%s\x1b[0m', `${message.author.tag} (${message.channel.type}): ${PREFIX + commandName} ${args.join(' ')}`)
         const command = client.regCmds.get(commandName)
         if (this.verifyCommandArgs(message, command, args)) return
         if (this.updateCooldowns(message, command)) return
@@ -91,7 +98,7 @@ class BotCommands {
         timestamps.set(message.author.id, now)
         setTimeout(() => {
             timestamps.delete(message.author.id)
-            console.log(`${message.author.tag} >${command.name} cd refreshed`)
+            console.log('\x1b[32m%s\x1b[0m', `${message.author.tag} >${command.name} cd refreshed`)
         }, cooldownTime)
         return null
     }
@@ -182,7 +189,7 @@ const BotCmds = new BotCommands()
 client.login(TOKEN)
 
 client.once('ready', () => {
-    console.log('bot active!')
+    console.log('\x1b[36m%s\x1b[0m', 'bot active!')
     GUILD = client.guilds.resolve('485517971452854272')
     VERIFIED_ROLE = GUILD.roles.cache.find(role => role.name === 'Verified')
     ADMIN_ROLE = GUILD.roles.cache.find(role => role.name === 'mod monkey')
