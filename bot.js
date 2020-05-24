@@ -1,7 +1,7 @@
-import fs from 'fs'
 import nodemailer from 'nodemailer'
 import CLASS_TO_ROLE from "./class_to_role.js"
-const {PREFIX, TOKEN, EMAIL_USER, EMAIL_PASS} = JSON.parse(fs.readFileSync("config.json"))
+import dotenv from 'dotenv'
+dotenv.config()
 var GUILD
 var VERIFIED_ROLE
 var ADMIN_ROLE
@@ -33,18 +33,18 @@ class BotCommands {
         this.transporter = nodemailer.createTransport({
             service: 'gmail',
             auth: {
-              user: EMAIL_USER,
-              pass: EMAIL_PASS
+              user: process.env.EMAIL_USER,
+              pass: process.env.EMAIL_PASS
             }
         })
-        this.PREFIX = PREFIX
-        this.EMAIL_USER = EMAIL_USER
+        this.PREFIX = process.env.PREFIX
+        this.EMAIL_USER = process.env.EMAIL_USER
     }
 
     dmCommand(message, commandName, args) {
         if (!this.isMember(message.author.id)) return message.channel.send('> Please join the EECS Discord server before using any commands')
         if (!client.dmCmds.has(commandName)) return
-        console.log('\x1b[36m%s\x1b[0m', `${message.author.tag} (${message.channel.type}): ${PREFIX + commandName} ${args.join(' ')}`)
+        console.log('\x1b[36m%s\x1b[0m', `${message.author.tag} (${message.channel.type}): ${this.PREFIX + commandName} ${args.join(' ')}`)
         const command = client.dmCmds.get(commandName)
         if (this.verifyCommandArgs(message, command, args)) return
         if (this.updateCooldowns(message, command)) return
@@ -58,7 +58,7 @@ class BotCommands {
 
     regCommand(message, commandName, args) {
         if (!client.regCmds.has(commandName)) return
-        console.log('\x1b[36m%s\x1b[0m', `${message.author.tag} (${message.channel.type}): ${PREFIX + commandName} ${args.join(' ')}`)
+        console.log('\x1b[36m%s\x1b[0m', `${message.author.tag} (${message.channel.type}): ${this.PREFIX + commandName} ${args.join(' ')}`)
         const command = client.regCmds.get(commandName)
         if (this.verifyCommandArgs(message, command, args)) return
         if (this.updateCooldowns(message, command)) return
@@ -75,7 +75,7 @@ class BotCommands {
             if (args.length != command.numArgs) {
                 let reply = '> Improper arguments provided!'
                 if (command.usage) {
-                    reply += `\n> Proper usage is \`${PREFIX}${command.name} ${command.usage}\``
+                    reply += `\n> Proper usage is \`${this.PREFIX}${command.name} ${command.usage}\``
                 }
                 return message.channel.send(reply)
             }
@@ -186,7 +186,7 @@ class BotCommands {
 }
 
 const BotCmds = new BotCommands()
-client.login(TOKEN)
+client.login(process.env.TOKEN)
 
 client.once('ready', () => {
     console.log('\x1b[36m%s\x1b[0m', 'bot active!')
@@ -199,8 +199,8 @@ client.on('error', e => console.error(e))
 client.on('warn', e => console.warn(e))
 
 client.on('message', message => {
-    if (message.author.bot || !message.content.startsWith(PREFIX)) return
-    const args = message.content.slice(PREFIX.length).split(/\s+/)
+    if (message.author.bot || !message.content.startsWith(process.env.PREFIX)) return
+    const args = message.content.slice(process.env.PREFIX.length).split(/\s+/)
     const commandName = args.shift().toLowerCase()
     if (!commandName.length) return
 

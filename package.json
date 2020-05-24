@@ -19,6 +19,7 @@
   "homepage": "https://github.com/feefs/discordbot#readme",
   "dependencies": {
     "discord.js": "^12.2.0",
+    "dotenv": "^8.2.0",
     "node-fetch": "^2.6.0",
     "nodemailer": "^6.4.6"
   }

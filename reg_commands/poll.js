@@ -10,7 +10,10 @@ export default {
         let emojis = ['0⃣', '1⃣', '2⃣', '3⃣', '4⃣', '5⃣', '6⃣', '7⃣', '8⃣', '9⃣']
         const pollItems = message.content.slice(bot.PREFIX.length + 5).split(/\s+(?={)/)
         const question = pollItems.shift().slice(1, -1)
-        if (pollItems.length > 10) return message.author.send('Poll value limit is 10')
+        if (pollItems.length > 10) {
+            await message.author.send(`> Your input: \`${message.content}\``)
+            return message.author.send('Poll value limit is 10')
+        }
         let contents = ''
         let index = 0
         pollItems.forEach(item => {
@@ -19,7 +22,7 @@ export default {
         })
         const embed = new Discord.MessageEmbed()
             .setColor('fdb515')
-            .setTitle(`Poll: \`${question}\``)
+            .setTitle(`\`${question}\``)
             .setAuthor(message.author.username, message.author.avatarURL({ dynamic: true }))
             .setDescription(contents)
         await message.author.send(embed)
