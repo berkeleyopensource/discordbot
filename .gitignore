@@ -1,4 +1,4 @@
-config.json
+.env
 nodemon.json
 node_modules
 .DS_Store
