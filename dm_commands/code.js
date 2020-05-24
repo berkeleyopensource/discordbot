@@ -5,7 +5,8 @@ export default {
     args: true,
     numArgs: 1,
     usage: '[code]',
-    async execute (message, args, bot) {
+    hide: true,
+    async execute(message, args, bot) {
         if (bot.isVerified(message.author.id)) return message.channel.send(`> User ${message.author.tag} is already verified.`)
         if (isNaN(args[0])) return message.channel.send('> Please enter a valid code')
         if (await bot.verifyCode(message, args[0])) {
@@ -13,7 +14,7 @@ export default {
                 .setColor('#fdb515')
                 .setTitle('Verification Successful')
                 .setDescription(`User \`${message.author.tag}\` has been verified.`)
-            message.channel.send(embed)
+            return message.channel.send(embed)
         }
     }
 }
