@@ -1,11 +1,10 @@
-import fs from 'fs'
 import nodemailer from 'nodemailer'
-import CLASS_TO_ROLE from "./class_to_role.js"
-const {PREFIX, TOKEN, EMAIL_USER, EMAIL_PASS} = JSON.parse(fs.readFileSync("config.json"))
+import CLASS_TO_ROLE from './class_to_role.js'
+import dotenv from 'dotenv'
+dotenv.config()
 var GUILD
 var VERIFIED_ROLE
 var ADMIN_ROLE
-const MESSAGE_IDS = []
 
 import Discord from 'discord.js'
 const verifications = new Map()
@@ -28,23 +27,28 @@ reg_commands.forEach(cmd => {
 })
 console.log('reg_commands loaded\n')
 
-class BotCommands {
-    constructor () {
+class BotMethods {
+    constructor() {
         this.transporter = nodemailer.createTransport({
             service: 'gmail',
             auth: {
-              user: EMAIL_USER,
-              pass: EMAIL_PASS
-            }
+                user: process.env.EMAIL_USER,
+                pass: process.env.EMAIL_PASS,
+            },
         })
-        this.PREFIX = PREFIX
-        this.EMAIL_USER = EMAIL_USER
+        this.PREFIX = process.env.PREFIX
+        this.EMAIL_USER = process.env.EMAIL_USER
+        this.MESSAGE_IDS = []
     }
 
     dmCommand(message, commandName, args) {
-        if (!this.isMember(message.author.id)) return message.channel.send('> Please join the EECS Discord server before using any commands')
+        if (!this.isMember(message.author.id))
+            return message.channel.send('> Please join the EECS Discord server before using any commands')
         if (!client.dmCmds.has(commandName)) return
-        console.log('\x1b[36m%s\x1b[0m', `${message.author.tag} (${message.channel.type}): ${PREFIX + commandName} ${args.join(' ')}`)
+        console.log(
+            '\x1b[36m%s\x1b[0m',
+            `${message.author.tag} (${message.channel.type}): ${this.PREFIX + commandName} ${args.join(' ')}`
+        )
         const command = client.dmCmds.get(commandName)
         if (this.verifyCommandArgs(message, command, args)) return
         if (this.updateCooldowns(message, command)) return
@@ -58,7 +62,10 @@ class BotCommands {
 
     regCommand(message, commandName, args) {
         if (!client.regCmds.has(commandName)) return
-        console.log('\x1b[36m%s\x1b[0m', `${message.author.tag} (${message.channel.type}): ${PREFIX + commandName} ${args.join(' ')}`)
+        console.log(
+            '\x1b[36m%s\x1b[0m',
+            `${message.author.tag} (${message.channel.type}): ${this.PREFIX + commandName} ${args.join(' ')}`
+        )
         const command = client.regCmds.get(commandName)
         if (this.verifyCommandArgs(message, command, args)) return
         if (this.updateCooldowns(message, command)) return
@@ -75,7 +82,7 @@ class BotCommands {
             if (args.length != command.numArgs) {
                 let reply = '> Improper arguments provided!'
                 if (command.usage) {
-                    reply += `\n> Proper usage is \`${PREFIX}${command.name} ${command.usage}\``
+                    reply += `\n> Proper usage is \`${this.PREFIX}${command.name} ${command.usage}\``
                 }
                 return message.channel.send(reply)
             }
@@ -92,7 +99,9 @@ class BotCommands {
             const expirationTime = timestamps.get(message.author.id) + cooldownTime
             if (now < expirationTime) {
                 const secondsLeft = (expirationTime - now) / 1000
-                return message.author.send(`> Please wait ${secondsLeft.toFixed(1)} seconds before reusing \`${command.name}\``)
+                return message.author.send(
+                    `> Please wait ${secondsLeft.toFixed(1)} seconds before reusing \`${command.name}\``
+                )
             }
         }
         timestamps.set(message.author.id, now)
@@ -148,32 +157,6 @@ class BotCommands {
         return true
     }
 
-    roleMessages(message) {
-        async function createRoleMessage (title, class_to_role) {
-            const selectionMessage = await message.channel.send(title)
-            MESSAGE_IDS.push(selectionMessage.id)
-            const rawComparator = (a, b) => {
-                function raw(s) {
-                    return s.replace(/[a-z_]/, '')
-                }
-                return raw(a) - raw(b)
-            }
-            for (let emojiName of Object.keys(class_to_role).sort(rawComparator)) {
-                try {
-                    const emoji = message.guild.emojis.cache.find(emoji => emoji.name === emojiName)
-                    await selectionMessage.react(emoji.id)
-                } catch (error) {
-                    console.log(`Emoji needed for ${emojiName} (${title})`)
-                }
-            }
-        }
-        Promise.all([
-          createRoleMessage("EECS Lower Division", CLASS_TO_ROLE.LD),
-          createRoleMessage("CS Upper Division", CLASS_TO_ROLE.CSUD),
-          createRoleMessage("EE Upper Division", CLASS_TO_ROLE.EEUD),
-        ])
-    }
-    
     react_to_role(guild, react_name) {
         for (let d in CLASS_TO_ROLE) {
             const division = CLASS_TO_ROLE[d]
@@ -185,34 +168,35 @@ class BotCommands {
     }
 }
 
-const BotCmds = new BotCommands()
-client.login(TOKEN)
+const BOT = new BotMethods()
+client.login(process.env.TOKEN)
 
 client.once('ready', () => {
     console.log('\x1b[36m%s\x1b[0m', 'bot active!')
-    GUILD = client.guilds.resolve('485517971452854272')
-    VERIFIED_ROLE = GUILD.roles.cache.find(role => role.name === 'Verified')
-    ADMIN_ROLE = GUILD.roles.cache.find(role => role.name === 'mod monkey')
+    GUILD = client.guilds.resolve(process.env.GUILD_ID)
+    VERIFIED_ROLE = GUILD.roles.cache.find(role => role.name === process.env.VERIFIED_ROLE_NAME)
+    ADMIN_ROLE = GUILD.roles.cache.find(role => role.name === process.env.ADMIN_ROLE_NAME)
 })
 
 client.on('error', e => console.error(e))
 client.on('warn', e => console.warn(e))
 
 client.on('message', message => {
-    if (message.author.bot || !message.content.startsWith(PREFIX)) return
-    const args = message.content.slice(PREFIX.length).split(/\s+/)
+    if (message.author.bot || !message.content.startsWith(process.env.PREFIX)) return
+    const args = message.content.slice(process.env.PREFIX.length).split(/\s+/)
     const commandName = args.shift().toLowerCase()
     if (!commandName.length) return
 
-    return message.channel.type === 'dm' ? BotCmds.dmCommand(message, commandName, args) :
-                                            BotCmds.regCommand(message, commandName, args)
+    return message.channel.type === 'dm'
+        ? BOT.dmCommand(message, commandName, args)
+        : BOT.regCommand(message, commandName, args)
 })
 
 client.on('messageReactionAdd', (messageReaction, user) => {
-    if (!MESSAGE_IDS.length || user.bot) return
+    if (!BOT.MESSAGE_IDS.length || user.bot) return
     const message = messageReaction.message
-    if (MESSAGE_IDS.includes(message.id)) {
-        const role = BotCmds.react_to_role(message.guild, messageReaction.emoji.name)
+    if (BOT.MESSAGE_IDS.includes(message.id)) {
+        const role = BOT.react_to_role(message.guild, messageReaction.emoji.name)
         if (role) {
             const member = message.guild.members.resolve(user)
             member.roles.add(role)
@@ -221,10 +205,10 @@ client.on('messageReactionAdd', (messageReaction, user) => {
 })
 
 client.on('messageReactionRemove', (messageReaction, user) => {
-    if (!MESSAGE_IDS.length || user.bot) return
+    if (!BOT.MESSAGE_IDS.length || user.bot) return
     const message = messageReaction.message
-    if (MESSAGE_IDS.includes(message.id)) {
-        const role = BotCmds.react_to_role(message.guild, messageReaction.emoji.name)
+    if (BOT.MESSAGE_IDS.includes(message.id)) {
+        const role = BOT.react_to_role(message.guild, messageReaction.emoji.name)
         if (role) {
             const member = message.guild.members.resolve(user)
             member.roles.remove(role)
