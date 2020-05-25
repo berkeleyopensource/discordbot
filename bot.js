@@ -190,9 +190,9 @@ client.login(process.env.TOKEN)
 
 client.once('ready', () => {
     console.log('\x1b[36m%s\x1b[0m', 'bot active!')
-    GUILD = client.guilds.resolve('485517971452854272')
-    VERIFIED_ROLE = GUILD.roles.cache.find(role => role.name === 'Verified')
-    ADMIN_ROLE = GUILD.roles.cache.find(role => role.name === 'mod monkey')
+    GUILD = client.guilds.resolve(process.env.GUILD_ID)
+    VERIFIED_ROLE = GUILD.roles.cache.find(role => role.name === process.env.VERIFIED_ROLE_NAME)
+    ADMIN_ROLE = GUILD.roles.cache.find(role => role.name === process.env.ADMIN_ROLE_NAME)
 })
 
 client.on('error', e => console.error(e))

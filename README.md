@@ -10,10 +10,17 @@ Before running, configure the test bot by adding an .env file with the following
 ```
 PREFIX=>
 TOKEN=[token]
+GUILD_ID=[guild id]
+VERIFIED_ROLE_NAME=[verified role name]
+ADMIN_ROLE_NAME=[admin role name]
 EMAIL_USER=[email]
 EMAIL_PASS=[password]
 ```
-where [token] is a token to your own test Discord bot.
+where
+* `[token]:` test Discord bot's token
+* `[guild_id]:` your server's guild id
+* `[verified role name]:` name of your server's verified role
+* `[admin role name]:` name of your server's admin role
 <br/>
 
 Put something for EMAIL_USER and EMAIL_PASS even if you do not plan on using nodemailer.
