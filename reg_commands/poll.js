@@ -15,16 +15,20 @@ export default {
             return message.author.send('Poll value limit is 10')
         }
         let contents = ''
-        let index = 0
-        pollItems.forEach(item => {
-            contents += `${emojis[index]} - \`${item.slice(1, -1)}\`\n`
-            index++
-        })
+        for (let i = 0; i < pollItems.length; i++) {
+            contents += `${emojis[i]} - \`${pollItems[i].slice(1, -1)}\`\n`
+        }
         const embed = new Discord.MessageEmbed()
             .setColor('fdb515')
             .setTitle(`\`${question}\``)
             .setAuthor(message.author.username, message.author.avatarURL({ dynamic: true }))
             .setDescription(contents)
+        if (!/\{|}/.test(message.content)) {
+            message.delete()
+            await message.author.send('> Items for `>poll` should be in curly brackets {}')
+            await message.author.send('> Example: `>poll {Beep?} {Beep} {Boop}`')
+            return message.author.send(`> Your input: \`${message.content}\``)
+        }
         await message.author.send(embed)
         await message.author.send(`> Your input: \`${message.content}\``)
         const confirmMessage = await message.author.send('> Does this look good?')
@@ -39,11 +43,9 @@ export default {
             .then(async collection => {
                 if (collection.first().emoji.name === '👍') {
                     const sentPoll = await message.channel.send(embed)
-                    let index = 0
-                    pollItems.forEach(item => {
-                        sentPoll.react(`${emojis[index]}`)
-                        index++
-                    })
+                    for (let i = 0; i < pollItems.length; i++) {
+                        sentPoll.react(`${emojis[i]}`)
+                    }
                     confirmMessage.delete()
                 } else {
                     confirmMessage.delete()
