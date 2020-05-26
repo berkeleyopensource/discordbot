@@ -5,7 +5,6 @@ dotenv.config()
 var GUILD
 var VERIFIED_ROLE
 var ADMIN_ROLE
-const MESSAGE_IDS = []
 
 import Discord from 'discord.js'
 const verifications = new Map()
@@ -28,7 +27,7 @@ reg_commands.forEach(cmd => {
 })
 console.log('reg_commands loaded\n')
 
-class BotCommands {
+class BotMethods {
     constructor() {
         this.transporter = nodemailer.createTransport({
             service: 'gmail',
@@ -39,6 +38,7 @@ class BotCommands {
         })
         this.PREFIX = process.env.PREFIX
         this.EMAIL_USER = process.env.EMAIL_USER
+        this.MESSAGE_IDS = []
     }
 
     dmCommand(message, commandName, args) {
@@ -157,32 +157,6 @@ class BotCommands {
         return true
     }
 
-    roleMessages(message) {
-        async function createRoleMessage(title, class_to_role) {
-            const selectionMessage = await message.channel.send(title)
-            MESSAGE_IDS.push(selectionMessage.id)
-            const rawComparator = (a, b) => {
-                function raw(s) {
-                    return s.replace(/[a-z_]/, '')
-                }
-                return raw(a) - raw(b)
-            }
-            for (let emojiName of Object.keys(class_to_role).sort(rawComparator)) {
-                try {
-                    const emoji = message.guild.emojis.cache.find(emoji => emoji.name === emojiName)
-                    await selectionMessage.react(emoji.id)
-                } catch (error) {
-                    console.log(`Emoji needed for ${emojiName} (${title})`)
-                }
-            }
-        }
-        Promise.all([
-            createRoleMessage('EECS Lower Division', CLASS_TO_ROLE.LD),
-            createRoleMessage('CS Upper Division', CLASS_TO_ROLE.CSUD),
-            createRoleMessage('EE Upper Division', CLASS_TO_ROLE.EEUD),
-        ])
-    }
-
     react_to_role(guild, react_name) {
         for (let d in CLASS_TO_ROLE) {
             const division = CLASS_TO_ROLE[d]
@@ -194,7 +168,7 @@ class BotCommands {
     }
 }
 
-const BotCmds = new BotCommands()
+const BOT = new BotMethods()
 client.login(process.env.TOKEN)
 
 client.once('ready', () => {
@@ -214,15 +188,15 @@ client.on('message', message => {
     if (!commandName.length) return
 
     return message.channel.type === 'dm'
-        ? BotCmds.dmCommand(message, commandName, args)
-        : BotCmds.regCommand(message, commandName, args)
+        ? BOT.dmCommand(message, commandName, args)
+        : BOT.regCommand(message, commandName, args)
 })
 
 client.on('messageReactionAdd', (messageReaction, user) => {
-    if (!MESSAGE_IDS.length || user.bot) return
+    if (!BOT.MESSAGE_IDS.length || user.bot) return
     const message = messageReaction.message
-    if (MESSAGE_IDS.includes(message.id)) {
-        const role = BotCmds.react_to_role(message.guild, messageReaction.emoji.name)
+    if (BOT.MESSAGE_IDS.includes(message.id)) {
+        const role = BOT.react_to_role(message.guild, messageReaction.emoji.name)
         if (role) {
             const member = message.guild.members.resolve(user)
             member.roles.add(role)
@@ -231,10 +205,10 @@ client.on('messageReactionAdd', (messageReaction, user) => {
 })
 
 client.on('messageReactionRemove', (messageReaction, user) => {
-    if (!MESSAGE_IDS.length || user.bot) return
+    if (!BOT.MESSAGE_IDS.length || user.bot) return
     const message = messageReaction.message
-    if (MESSAGE_IDS.includes(message.id)) {
-        const role = BotCmds.react_to_role(message.guild, messageReaction.emoji.name)
+    if (BOT.MESSAGE_IDS.includes(message.id)) {
+        const role = BOT.react_to_role(message.guild, messageReaction.emoji.name)
         if (role) {
             const member = message.guild.members.resolve(user)
             member.roles.remove(role)
