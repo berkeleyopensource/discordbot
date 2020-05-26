@@ -5,5 +5,5 @@ export default {
     execute(message, args, bot) {
         if (!bot.isMod(message.author.id)) return
         return bot.roleMessages(message)
-    }
+    },
 }

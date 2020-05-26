@@ -1,5 +1,5 @@
 import nodemailer from 'nodemailer'
-import CLASS_TO_ROLE from "./class_to_role.js"
+import CLASS_TO_ROLE from './class_to_role.js'
 import dotenv from 'dotenv'
 dotenv.config()
 var GUILD
@@ -29,22 +29,26 @@ reg_commands.forEach(cmd => {
 console.log('reg_commands loaded\n')
 
 class BotCommands {
-    constructor () {
+    constructor() {
         this.transporter = nodemailer.createTransport({
             service: 'gmail',
             auth: {
-              user: process.env.EMAIL_USER,
-              pass: process.env.EMAIL_PASS
-            }
+                user: process.env.EMAIL_USER,
+                pass: process.env.EMAIL_PASS,
+            },
         })
         this.PREFIX = process.env.PREFIX
         this.EMAIL_USER = process.env.EMAIL_USER
     }
 
     dmCommand(message, commandName, args) {
-        if (!this.isMember(message.author.id)) return message.channel.send('> Please join the EECS Discord server before using any commands')
+        if (!this.isMember(message.author.id))
+            return message.channel.send('> Please join the EECS Discord server before using any commands')
         if (!client.dmCmds.has(commandName)) return
-        console.log('\x1b[36m%s\x1b[0m', `${message.author.tag} (${message.channel.type}): ${this.PREFIX + commandName} ${args.join(' ')}`)
+        console.log(
+            '\x1b[36m%s\x1b[0m',
+            `${message.author.tag} (${message.channel.type}): ${this.PREFIX + commandName} ${args.join(' ')}`
+        )
         const command = client.dmCmds.get(commandName)
         if (this.verifyCommandArgs(message, command, args)) return
         if (this.updateCooldowns(message, command)) return
@@ -58,7 +62,10 @@ class BotCommands {
 
     regCommand(message, commandName, args) {
         if (!client.regCmds.has(commandName)) return
-        console.log('\x1b[36m%s\x1b[0m', `${message.author.tag} (${message.channel.type}): ${this.PREFIX + commandName} ${args.join(' ')}`)
+        console.log(
+            '\x1b[36m%s\x1b[0m',
+            `${message.author.tag} (${message.channel.type}): ${this.PREFIX + commandName} ${args.join(' ')}`
+        )
         const command = client.regCmds.get(commandName)
         if (this.verifyCommandArgs(message, command, args)) return
         if (this.updateCooldowns(message, command)) return
@@ -92,7 +99,9 @@ class BotCommands {
             const expirationTime = timestamps.get(message.author.id) + cooldownTime
             if (now < expirationTime) {
                 const secondsLeft = (expirationTime - now) / 1000
-                return message.author.send(`> Please wait ${secondsLeft.toFixed(1)} seconds before reusing \`${command.name}\``)
+                return message.author.send(
+                    `> Please wait ${secondsLeft.toFixed(1)} seconds before reusing \`${command.name}\``
+                )
             }
         }
         timestamps.set(message.author.id, now)
@@ -149,7 +158,7 @@ class BotCommands {
     }
 
     roleMessages(message) {
-        async function createRoleMessage (title, class_to_role) {
+        async function createRoleMessage(title, class_to_role) {
             const selectionMessage = await message.channel.send(title)
             MESSAGE_IDS.push(selectionMessage.id)
             const rawComparator = (a, b) => {
@@ -168,12 +177,12 @@ class BotCommands {
             }
         }
         Promise.all([
-          createRoleMessage("EECS Lower Division", CLASS_TO_ROLE.LD),
-          createRoleMessage("CS Upper Division", CLASS_TO_ROLE.CSUD),
-          createRoleMessage("EE Upper Division", CLASS_TO_ROLE.EEUD),
+            createRoleMessage('EECS Lower Division', CLASS_TO_ROLE.LD),
+            createRoleMessage('CS Upper Division', CLASS_TO_ROLE.CSUD),
+            createRoleMessage('EE Upper Division', CLASS_TO_ROLE.EEUD),
         ])
     }
-    
+
     react_to_role(guild, react_name) {
         for (let d in CLASS_TO_ROLE) {
             const division = CLASS_TO_ROLE[d]
@@ -204,8 +213,9 @@ client.on('message', message => {
     const commandName = args.shift().toLowerCase()
     if (!commandName.length) return
 
-    return message.channel.type === 'dm' ? BotCmds.dmCommand(message, commandName, args) :
-                                            BotCmds.regCommand(message, commandName, args)
+    return message.channel.type === 'dm'
+        ? BotCmds.dmCommand(message, commandName, args)
+        : BotCmds.regCommand(message, commandName, args)
 })
 
 client.on('messageReactionAdd', (messageReaction, user) => {

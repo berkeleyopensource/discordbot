@@ -5,5 +5,5 @@ export default {
     cooldown: 5,
     execute(message, args, bot) {
         return message.channel.send('bar')
-    }
+    },
 }

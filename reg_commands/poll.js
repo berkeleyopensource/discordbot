@@ -34,7 +34,12 @@ export default {
         const confirmMessage = await message.author.send('> Does this look good?')
         await confirmMessage.react('👍')
         await confirmMessage.react('👎')
-        confirmMessage.awaitReactions((reaction, user) => user.id === message.author.id && (reaction.emoji.name === '👍' || reaction.emoji.name === '👎'), { max: 1, time: 15000})
+        confirmMessage
+            .awaitReactions(
+                (reaction, user) =>
+                    user.id === message.author.id && (reaction.emoji.name === '👍' || reaction.emoji.name === '👎'),
+                { max: 1, time: 10000 }
+            )
             .then(async collection => {
                 if (collection.first().emoji.name === '👍') {
                     const sentPoll = await message.channel.send(embed)
@@ -51,5 +56,5 @@ export default {
                 confirmMessage.delete()
                 return message.author.send('> No response, poll creation cancelled.')
             })
-    }
+    },
 }
