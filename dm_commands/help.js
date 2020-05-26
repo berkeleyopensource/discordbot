@@ -11,9 +11,7 @@ export default {
         if (args.length) {
             const command = dmCmds.get(args[0]) || regCmds.get(args[0])
             if (!command) {
-                return message.author.send(
-                    `> Command \`${args[0]}\` does not exist`
-                )
+                return message.author.send(`> Command \`${args[0]}\` does not exist`)
             }
             const embed = new Discord.MessageEmbed()
                 .setColor('fdb515')
@@ -22,9 +20,7 @@ export default {
                     { name: 'Description:', value: command.description },
                     {
                         name: 'Usage:',
-                        value: `\`${bot.PREFIX}${command.name}${
-                            command.usage ? ` ${command.usage}` : ''
-                        }\``,
+                        value: `\`${bot.PREFIX}${command.name}${command.usage ? ` ${command.usage}` : ''}\``,
                     }
                 )
             return message.author.send(embed)
@@ -40,9 +36,7 @@ export default {
             const embed = new Discord.MessageEmbed()
                 .setColor('fdb515')
                 .setTitle('Help')
-                .setDescription(
-                    `Use \`${bot.PREFIX}help [command name]\` for help on a specific command.`
-                )
+                .setDescription(`Use \`${bot.PREFIX}help [command name]\` for help on a specific command.`)
                 .addFields(
                     { name: 'Available DM Commands:', value: dm_cmds },
                     { name: 'Available Server Commands:', value: server_cmds }

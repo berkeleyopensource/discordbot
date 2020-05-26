@@ -9,12 +9,9 @@ export default {
     cooldown: 15,
     async execute(message, args, bot) {
         if (bot.isVerified(message.author.id))
-            return message.channel.send(
-                `> User ${message.author.tag} is already verified.`
-            )
+            return message.channel.send(`> User ${message.author.tag} is already verified.`)
         const regex = /^[A-z0-9._%+-]+@berkeley\.edu$/
-        if (!regex.test(args[0]))
-            return message.channel.send('> Please enter a valid Berkeley email')
+        if (!regex.test(args[0])) return message.channel.send('> Please enter a valid Berkeley email')
         const code = bot.generateCode()
         const info = {
             from: bot.EMAIL_USER,
@@ -24,17 +21,11 @@ export default {
         }
         try {
             await bot.transporter.sendMail(info)
-            console.log(
-                `Code successfully sent to ${args[0]} for user ${message.author.tag}`
-            )
+            console.log(`Code successfully sent to ${args[0]} for user ${message.author.tag}`)
             bot.queueCode(message, code)
         } catch (error) {
-            console.error(
-                `Code failed to send to ${args[0]} for user ${message.author.tag}`
-            )
-            return message.channel.send(
-                `> Error sending email to \`${args[0]}\``
-            )
+            console.error(`Code failed to send to ${args[0]} for user ${message.author.tag}`)
+            return message.channel.send(`> Error sending email to \`${args[0]}\``)
         }
         const embed = new Discord.MessageEmbed()
             .setColor('#fdb515')
