@@ -1,0 +1,21 @@
+{
+    "compilerOptions": {
+        "target": "es2016",
+        "module": "commonjs",
+        "moduleResolution": "node",
+        "inlineSourceMap": true,
+        "outDir": "dist",
+        "baseUrl": ".",
+        "strict": true,
+        "paths": {
+            "*": [
+                "node_modules/*"
+            ]
+        },
+        "strictNullChecks": false
+    },
+    "include": [
+        "src/**/*"
+    ],
+    "exclude": []
+}

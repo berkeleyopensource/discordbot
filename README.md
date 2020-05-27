@@ -11,8 +11,8 @@ Before running, configure the test bot by adding an .env file with the following
 PREFIX=>
 TOKEN=[token]
 GUILD_ID=[guild id]
-VERIFIED_ROLE_NAME=[verified role name]
-ADMIN_ROLE_NAME=[admin role name]
+VERIFIED_ROLE_ID=[verified role name]
+ADMIN_ROLE_ID=[admin role name]
 EMAIL_USER=[email]
 EMAIL_PASS=[password]
 ```
