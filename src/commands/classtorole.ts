@@ -9,7 +9,7 @@ export class ClassToRoleCommand extends EECSCommand {
             memberName: 'classtorole',
             description: 'temporary command',
             hidden: true,
-            adminOnly: true
+            adminOnly: true,
         })
     }
 

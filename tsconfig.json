@@ -8,14 +8,10 @@
         "baseUrl": ".",
         "strict": true,
         "paths": {
-            "*": [
-                "node_modules/*"
-            ]
+            "*": ["node_modules/*"]
         },
         "strictNullChecks": false
     },
-    "include": [
-        "src/**/*"
-    ],
+    "include": ["src/**/*"],
     "exclude": []
 }

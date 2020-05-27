@@ -8,7 +8,7 @@ export class DadJokeCommand extends EECSCommand {
             name: 'dadjoke',
             group: 'fun',
             memberName: 'dadjoke',
-            description: 'gets a random dadjoke'
+            description: 'gets a random dadjoke',
         })
     }
 
