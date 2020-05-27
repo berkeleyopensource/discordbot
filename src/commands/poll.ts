@@ -1,9 +1,10 @@
 import EECSCommand from '../EECSCommand'
-import { MessageEmbed } from 'discord.js'
+import { MessageEmbed, Message } from 'discord.js'
+import { CommandoClient, CommandoMessage } from 'discord.js-commando'
 
 export class PollCommand extends EECSCommand {
     private readonly emojis = ['0⃣', '1⃣', '2⃣', '3⃣', '4⃣', '5⃣', '6⃣', '7⃣', '8⃣', '9⃣']
-    constructor(client) {
+    constructor(client: CommandoClient) {
         super(client, {
             name: 'poll',
             group: 'util',
@@ -19,7 +20,8 @@ export class PollCommand extends EECSCommand {
         })
     }
 
-    async execute(message, args) {
+    async execute(message: CommandoMessage, args: string) {
+        // i did not bother to look through this code and clean it up other than small things but it seems to work
         const pollItems = args.split(/\s+(?={)/)
         if (pollItems.length < 2)
             return message.say('> Please provide at least a question and one poll option')
@@ -33,24 +35,25 @@ export class PollCommand extends EECSCommand {
         for (let i = 0; i < pollItems.length; i++) {
             contents += `${this.emojis[i]} - \`${pollItems[i].slice(1, -1)}\`\n`
         }
+
+        let embed = new MessageEmbed({
+            title: `\`${question}\``,
+            description: contents,
+            color: 0xfdb515,
+        }).setAuthor(
+            message.author.username, 
+            message.author.avatarURL({ dynamic: true })
+        )
+
         if (!/\{|}/.test(message.content)) {
             message.delete()
             await message.say('> Items for `>poll` should be in curly brackets {}')
             await message.say('> Example: `>poll {Beep?} {Beep} {Boop}`')
             return message.say(`> Your input: \`${message.content}\``)
         }
-        await message.say(
-            new MessageEmbed({
-                title: `\`${question}\``,
-                description: contents,
-                color: 0xfdb515,
-            }).setAuthor(
-                message.author.username, 
-                message.author.avatarURL({ dynamic: true })
-            )
-        )
+        await message.say(embed)
         await message.say(`> Your input: \`${message.content}\``)
-        const confirmMessage = await message.say('> Does this look good?')
+        const confirmMessage = await message.say('> Does this look good?') as Message
         await confirmMessage.react('👍')
         await confirmMessage.react('👎')
         confirmMessage

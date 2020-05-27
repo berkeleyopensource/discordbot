@@ -1,27 +1,28 @@
-import { Command } from 'discord.js-commando'
+import { Command, CommandoClient, CommandInfo, CommandoMessage, ArgumentCollectorResult } from 'discord.js-commando'
+import { Message } from 'discord.js';
 
 /**
  * The default Commando command, but with some server specific features added. Use `execute()` instead of run in commands that extend this.
  */
 export default class EECSCommand extends Command {
-    /**
-     * @param {Commando.CommandoClient} client 
-     * @param {object} info the same as Commando.CommandInfo but with three extra optional parameters: `unverifiedOnly`, `adminOnly`, and `dmOnly`
-     */
-    constructor(client, info) {
+    private dmOnly: boolean;
+    private unverifiedOnly: boolean;
+    private adminOnly: boolean;
+
+    constructor(client: CommandoClient, info: EECSCommandInfo) {
+        super(client, info)
         this.dmOnly = info.dmOnly
         this.unverifiedOnly = info.unverifiedOnly
         this.adminOnly = info.adminOnly
-        super(client, info)
     }
 
-    async run(message, args, fromPattern, result) {
+    async run(message: CommandoMessage, args: Object | string | Array<string>, fromPattern: boolean, result?: ArgumentCollectorResult): Promise<Message | Message[]> {
         let member = this.client.guilds.resolve(process.env.GUILD_ID).member(message.author)
         if (!member)
-            return message.say('> You\'re not in the EECS server. How\'d you even find this bot?')
+            return message.say('> Please join the EECS Discord server before using any commands.')
 
         if (this.dmOnly && message.channel.type != 'dm') {
-            return message.say('> Please join the EECS Discord server before using any commands')
+            return message.say('> You can only use this command in a DM.')
         }
 
         if (this.unverifiedOnly && member.roles.cache.has(process.env.VERIFIED_ROLE_ID)) {
@@ -38,7 +39,14 @@ export default class EECSCommand extends Command {
     /**
      * The normal `Command.run()` method but with a few custom checks
      */
-    async execute(message, args, fromPattern, result) {
+    async execute(message: CommandoMessage, args: Object | string | Array<string>, fromPattern: boolean, result?: ArgumentCollectorResult): Promise<Message | Message[]> {
 		throw new Error(`${this.constructor.name} doesn't have a run() method.`)
 	}
+}
+
+export interface EECSCommandInfo extends CommandInfo {
+    dmOnly?: boolean,
+    unverifiedOnly?: boolean,
+    adminOnly?: boolean,
+    hidden?: boolean
 }

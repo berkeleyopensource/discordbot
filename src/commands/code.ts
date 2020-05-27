@@ -1,9 +1,10 @@
 import EECSCommand from '../EECSCommand'
 import { MessageEmbed } from 'discord.js'
 import { verifyCode } from '../verification'
+import { CommandoClient, CommandoMessage } from 'discord.js-commando'
 
 export class CodeCommand extends EECSCommand {
-    constructor(client) {
+    constructor(client: CommandoClient) {
         super(client, {
             name: 'code',
             group: 'mod',
@@ -22,8 +23,10 @@ export class CodeCommand extends EECSCommand {
         })
     }
 
-    execute(message, { code }) {
-        if (verifyCode(message.author, code)) {
+    async execute(message: CommandoMessage, args: { code: number }) {
+        if (verifyCode(message.author, args.code)) {
+            await this.client.guilds.resolve(process.env.GUILD_ID).member(message.author).roles.add(process.env.VERIFIED_ROLE_ID)
+
             return message.say(new MessageEmbed({
                 title: 'Verification Successful',
                 description: `User \`${message.author.tag}\` has been verified.`,

@@ -1,11 +1,12 @@
 import EECSCommand from '../EECSCommand'
 import { sendCode } from '../verification'
 import { MessageEmbed } from 'discord.js'
+import { CommandoClient, CommandoMessage } from 'discord.js-commando'
 
 export class EmailCommand extends EECSCommand {
     private readonly regex = /^[A-z0-9._%+-]+@berkeley\.edu$/
 
-    constructor(client) {
+    constructor(client: CommandoClient) {
         super(client, {
             name: 'email',
             group: 'mod',
@@ -28,21 +29,21 @@ export class EmailCommand extends EECSCommand {
         })
     }
 
-    execute(message, { email }) {
-        if (!this.regex.test(email)) 
+    execute(message: CommandoMessage, args: { email: string }) {
+        if (!this.regex.test(args.email)) 
             return message.say('> Please enter a valid Berkeley email')
 
-        let success = sendCode(message.author, email)
+        let success = sendCode(message.author, args.email)
         if (success) {
             return message.say(new MessageEmbed({
                 title: `Email Received`,
-                description: `Verification code successfully sent to \`${email}\`\n\n` +
+                description: `Verification code successfully sent to \`${args.email}\`\n\n` +
                     'Once you receive your temporary verification code, please verify using\n' +
-                    `\`${process.env.PREFIX}code [verification code]\``
+                    `\`${process.env.PREFIX}code [verification code]\``,
                 color: 0xfdb515
             }))
         } else {
-            return message.say(`> Error sending email to \`${email}\``)
+            return message.say(`> Error sending email to \`${args.email}\``)
         }
     }
 }

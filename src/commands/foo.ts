@@ -1,7 +1,8 @@
 import EECSCommand from '../EECSCommand'
+import { CommandoClient, CommandoMessage } from 'discord.js-commando'
 
 export class FooCommand extends EECSCommand {
-    constructor(client) {
+    constructor(client: CommandoClient) {
         super(client, {
             name: 'foo',
             group: 'misc',
@@ -15,7 +16,7 @@ export class FooCommand extends EECSCommand {
         })
     }
 
-    async execute(message) {
+    async execute(message: CommandoMessage) {
         return message.reply('bar')
     }
 }

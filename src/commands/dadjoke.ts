@@ -1,7 +1,9 @@
 import EECSCommand from '../EECSCommand'
+import { CommandoClient, CommandoMessage } from 'discord.js-commando'
+import fetch from 'node-fetch'
 
 export class DadJokeCommand extends EECSCommand {
-    constructor(client) {
+    constructor(client: CommandoClient) {
         super(client, {
             name: 'dadjoke',
             group: 'fun',
@@ -10,13 +12,14 @@ export class DadJokeCommand extends EECSCommand {
         })
     }
 
-    async execute(message) {
+    async execute(message: CommandoMessage) {
         try {
             const j = await fetch('https://icanhazdadjoke.com/', {
                 headers: { Accept: 'text/plain' },
             })
             return message.say(await j.text())
         } catch (error) {
+            console.log(error)
             return message.say('> Error querying dad joke :(')
         }
     }

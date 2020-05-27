@@ -1,7 +1,6 @@
 import { CommandoClient } from 'discord.js-commando'
-import nodemailer from 'nodemailer'
-import dotenv from 'dotenv'
-import path from 'path'
+import * as dotenv from 'dotenv'
+import * as path from 'path'
 
 dotenv.config()
 
@@ -32,3 +31,5 @@ client.on('messageReactionAdd', (messageReaction, user) => {
 client.on('messageReactionRemove', (messageReaction, user) => {
     // TODO: y'all, i have no idea what the original code was supposed to do. i'll leave this to you guys :P
 })
+
+client.login(process.env.TOKEN)

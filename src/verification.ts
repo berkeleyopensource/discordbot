@@ -1,6 +1,7 @@
-import nodemailer from 'nodemailer'
+import * as nodemailer from 'nodemailer'
+import { User } from 'discord.js'
 
-let codes = {}
+let codes: { [key: string]: number } = {}
 
 const transporter = nodemailer.createTransport({
     service: 'gmail',
@@ -10,11 +11,7 @@ const transporter = nodemailer.createTransport({
     }
 })
 
-/**
- * @param {Discord.User} user
- * @param {number} code
- */
-export function verifyCode(user, code) {
+export function verifyCode(user: User, code: number) {
     if (codes[user.id] == code) {
         delete codes[user.id]
         return true
@@ -25,12 +22,10 @@ export function verifyCode(user, code) {
 /**
  * Generates, stores, and sends a verification code to the email
  * 
- * @param {Discord.User} user 
- * @param {string} email the email address to send the code to
  * @returns whether the send was successful
  */
-export function sendCode(user, email): boolean {
-    const code = new Date().getTime() % 1000000
+export function sendCode(user: User, email: string): boolean {
+    let code = new Date().getTime() % 1000000
     code = code < 1000000 ? code + 1000000 : code
 
     try {
@@ -44,7 +39,7 @@ export function sendCode(user, email): boolean {
         setTimeout(() => {
             if (codes[user.id] == code) {
                 delete codes[user.id]
-                console.log(`User ${message.author.tag} deleted from queue`)
+                console.log(`User ${user.tag} deleted from queue`)
             }
         }, 5*60*1000)
 

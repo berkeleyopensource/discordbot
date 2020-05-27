@@ -1,8 +1,9 @@
 import EECSCommand from '../EECSCommand'
 import { MessageEmbed } from 'discord.js'
+import { CommandoClient, CommandoMessage } from 'discord.js-commando'
 
 export class VerifyCommand extends EECSCommand {
-    constructor(client) {
+    constructor(client: CommandoClient) {
         super(client, {
             name: 'verify',
             group: 'mod',
@@ -13,12 +14,12 @@ export class VerifyCommand extends EECSCommand {
         })
     }
     
-    execute(message) {
+    execute(message: CommandoMessage) {
         return message.say(
             new MessageEmbed({
                 title: 'Verification',
                 description: 'Please submit your Berkeley email for verification.\n' +
-                    'Your information will not be stored or tied to your Discord account.'
+                    'Your information will not be stored or tied to your Discord account.',
                 color: 0xfdb515
             }).addField('Instructions:', 'Submit your email using\n\`>email [berkeley.edu email]\`\n\n')
         )
