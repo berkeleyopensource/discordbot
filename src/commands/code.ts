@@ -10,21 +10,17 @@ export class CodeCommand extends EECSCommand {
             group: 'mod',
             memberName: 'code',
             description: 'submits code for verification',
-            args: [
-                {
-                    key: 'code',
-                    prompt: '> Please enter a valid code',
-                    type: 'integer'
-                }
-            ],
             hidden: true,
             dmOnly: true,
             unverifiedOnly: true
         })
     }
 
-    async execute(message: CommandoMessage, args: { code: number }) {
-        if (verifyCode(message.author, args.code)) {
+    async execute(message: CommandoMessage, args: string) {
+        if (!args || isNaN(Number(args))) {
+            return message.say('> Please enter a valid code')
+        }
+        if (verifyCode(message.author, Number(args))) {
             await this.client.guilds.resolve(process.env.GUILD_ID).member(message.author).roles.add(process.env.VERIFIED_ROLE_ID)
 
             return message.say(new MessageEmbed({
