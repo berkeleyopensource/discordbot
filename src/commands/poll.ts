@@ -24,7 +24,7 @@ export class PollCommand extends EECSCommand {
         // i did not bother to look through this code and clean it up other than small things but it seems to work
         const pollItems = args.split(/\s+(?={)/)
         if (pollItems.length < 2) {
-            return message.say(
+            return message.direct(
                 `> Items for \`${process.env.PREFIX}poll\` should be in curly brackets {}\n` + 
                 `> Example: \`${process.env.PREFIX}poll {Beep?} {Beep} {Boop}\`\n` + 
                 '> Please provide at least a question and one poll option'
