@@ -23,8 +23,13 @@ export class PollCommand extends EECSCommand {
     async execute(message: CommandoMessage, args: string) {
         // i did not bother to look through this code and clean it up other than small things but it seems to work
         const pollItems = args.split(/\s+(?={)/)
-        if (pollItems.length < 2)
-            return message.say('> Please provide at least a question and one poll option')
+        if (pollItems.length < 2) {
+            return message.say(
+                `> Items for \`${process.env.PREFIX}poll\` should be in curly brackets {}\n` + 
+                `> Example: \`${process.env.PREFIX}poll {Beep?} {Beep} {Boop}\`\n` + 
+                '> Please provide at least a question and one poll option'
+            )
+        }
         
         const question = pollItems.shift().slice(1, -1)
         if (pollItems.length > 10) {
@@ -45,12 +50,6 @@ export class PollCommand extends EECSCommand {
             message.author.avatarURL({ dynamic: true })
         )
 
-        if (!/\{|}/.test(message.content)) {
-            message.delete()
-            await message.say('> Items for `>poll` should be in curly brackets {}')
-            await message.say('> Example: `>poll {Beep?} {Beep} {Boop}`')
-            return message.say(`> Your input: \`${message.content}\``)
-        }
         await message.say(embed)
         await message.say(`> Your input: \`${message.content}\``)
         const confirmMessage = await message.say('> Does this look good?') as Message
