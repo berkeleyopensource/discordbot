@@ -9,10 +9,7 @@ export class FooCommand extends EECSCommand {
             memberName: 'foo',
             description: 'foo test command',
             hidden: true,
-            throttling: {
-                usages: 1,
-                duration: 5
-            },
+            throttleTime: 5,
         })
     }
 

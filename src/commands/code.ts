@@ -12,7 +12,7 @@ export class CodeCommand extends EECSCommand {
             description: 'submits code for verification',
             hidden: true,
             dmOnly: true,
-            unverifiedOnly: true
+            unverifiedOnly: true,
         })
     }
 
@@ -21,13 +21,18 @@ export class CodeCommand extends EECSCommand {
             return message.say('> Please enter a valid code')
         }
         if (verifyCode(message.author, Number(args))) {
-            await this.client.guilds.resolve(process.env.GUILD_ID).member(message.author).roles.add(process.env.VERIFIED_ROLE_ID)
+            await this.client.guilds
+                .resolve(process.env.GUILD_ID)
+                .member(message.author)
+                .roles.add(process.env.VERIFIED_ROLE_ID)
 
-            return message.say(new MessageEmbed({
-                title: 'Verification Successful',
-                description: `User \`${message.author.tag}\` has been verified.`,
-                color: 0xfdb515
-            }))
+            return message.say(
+                new MessageEmbed({
+                    title: 'Verification Successful',
+                    description: `User \`${message.author.tag}\` has been verified.`,
+                    color: 0xfdb515,
+                })
+            )
         } else {
             return message.say('> Incorrect verification code')
         }

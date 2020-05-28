@@ -10,13 +10,8 @@ export class PollCommand extends EECSCommand {
             group: 'util',
             memberName: 'poll',
             description: 'starts a poll',
-            throttling: {
-                usages: 1,
-                duration: 10
-            },
-            examples: [
-                'poll {which is the superior cs?} {EECS} {LSCS} {cogsci} {cool socks}'
-            ]
+            examples: [`\`${process.env.PREFIX}poll {which is the superior cs?} {EECS} {LSCS} {cogsci} {cool socks}\``],
+            throttleTime: 10,
         })
     }
 
@@ -25,12 +20,12 @@ export class PollCommand extends EECSCommand {
         const pollItems = args.split(/\s+(?={)/)
         if (pollItems.length < 2) {
             return message.direct(
-                `> Items for \`${process.env.PREFIX}poll\` should be in curly brackets {}\n` + 
-                `> Example: \`${process.env.PREFIX}poll {Beep?} {Beep} {Boop}\`\n` + 
-                '> Please provide at least a question and one poll option'
+                `> Items for \`${process.env.PREFIX}poll\` should be in curly brackets {}\n` +
+                    `> Example: \`${process.env.PREFIX}poll {Beep?} {Beep} {Boop}\`\n` +
+                    '> Please provide at least a question and one poll option'
             )
         }
-        
+
         const question = pollItems.shift().slice(1, -1)
         if (pollItems.length > 10) {
             await message.say(`> Your input: \`${message.content}\``)
@@ -45,14 +40,11 @@ export class PollCommand extends EECSCommand {
             title: `\`${question}\``,
             description: contents,
             color: 0xfdb515,
-        }).setAuthor(
-            message.author.username, 
-            message.author.avatarURL({ dynamic: true })
-        )
+        }).setAuthor(message.author.username, message.author.avatarURL({ dynamic: true }))
 
         await message.direct(embed)
         await message.direct(`> Your input: \`${message.content}\``)
-        const confirmMessage = await message.direct('> Does this look good?') as Message
+        const confirmMessage = (await message.direct('> Does this look good?')) as Message
         await confirmMessage.react('👍')
         await confirmMessage.react('👎')
         confirmMessage

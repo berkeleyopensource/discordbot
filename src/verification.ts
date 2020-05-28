@@ -8,7 +8,7 @@ const transporter = nodemailer.createTransport({
     auth: {
         user: process.env.EMAIL_USER,
         pass: process.env.EMAIL_PASS,
-    }
+    },
 })
 
 export function verifyCode(user: User, code: number) {
@@ -21,7 +21,7 @@ export function verifyCode(user: User, code: number) {
 
 /**
  * Generates, stores, and sends a verification code to the email
- * 
+ *
  * @returns whether the send was successful
  */
 export function sendCode(user: User, email: string): boolean {
@@ -33,7 +33,7 @@ export function sendCode(user: User, email: string): boolean {
             from: process.env.EMAIL_USER,
             to: email,
             subject: 'EECS Discord Verification Code',
-            text: `Please use the code ${code} to complete your verification.\nThis code will expire in five minutes.`
+            text: `Please use the code ${code} to complete your verification.\nThis code will expire in five minutes.`,
         })
         codes[user.id] = code
         setTimeout(() => {
@@ -41,7 +41,7 @@ export function sendCode(user: User, email: string): boolean {
                 delete codes[user.id]
                 console.log(`User ${user.tag} deleted from queue`)
             }
-        }, 5*60*1000)
+        }, 5 * 60 * 1000)
 
         console.log(`Code successfully sent to ${email} for user ${user.tag}`)
 
