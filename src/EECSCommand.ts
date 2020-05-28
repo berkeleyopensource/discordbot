@@ -28,9 +28,12 @@ export default class EECSCommand extends Command {
     ): Promise<Message | Message[]> {
         console.log(
             '\x1b[36m%s\x1b[0m',
-            `${message.author.tag} (${message.channel.type}): ${process.env.PREFIX + this.name} ${args}`
+            `${message.author.tag}: (${message.channel.type}) ${process.env.PREFIX + this.name} ${
+                message.channel.type != 'dm' ? args : ''
+            }`
         )
-        let member = this.client.guilds.resolve(process.env.GUILD_ID).member(message.author)
+
+        const member = this.client.guilds.resolve(process.env.GUILD_ID).member(message.author)
         if (!member) return message.say('> Please join the EECS Discord server before using any commands.')
 
         if (this.dmOnly && message.channel.type != 'dm') {
@@ -48,19 +51,19 @@ export default class EECSCommand extends Command {
             return message.say('> You must be a server admin to use this command')
         }
 
-        let now = Date.now()
-        let cdTime = this.throttleTime * 1000
+        const now = Date.now()
+        const cdTime = this.throttleTime * 1000
         if (this.throttleMap.has(message.author.id)) {
-            let expirationTime = this.throttleMap.get(message.author.id) + cdTime
+            const expirationTime = this.throttleMap.get(message.author.id) + cdTime
             if (now < expirationTime) {
-                let secondsLeft = (expirationTime - now) / 1000
+                const secondsLeft = (expirationTime - now) / 1000
                 return message.direct(`> Please wait ${secondsLeft.toFixed(1)} seconds before reusing \`${this.name}\``)
             }
         }
         this.throttleMap.set(message.author.id, now)
         setTimeout(() => {
             this.throttleMap.delete(message.author.id)
-            console.log('\x1b[32m%s\x1b[0m', `${message.author.tag} >${this.name} cd refreshed`)
+            console.log('\x1b[32m%s\x1b[0m', `${message.author.tag}: ${process.env.PREFIX}${this.name} cd refreshed`)
         }, cdTime)
 
         return this.execute(message, args, fromPattern, result)

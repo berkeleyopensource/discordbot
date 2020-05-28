@@ -6,8 +6,8 @@ let codes: { [key: string]: number } = {}
 const transporter = nodemailer.createTransport({
     service: 'gmail',
     auth: {
-        user: process.env.EMAIL_USER,
-        pass: process.env.EMAIL_PASS,
+        user: process.env.EMAIL_USER || '',
+        pass: process.env.EMAIL_PASS || '',
     },
 })
 
@@ -24,12 +24,12 @@ export function verifyCode(user: User, code: number) {
  *
  * @returns whether the send was successful
  */
-export function sendCode(user: User, email: string): boolean {
+export async function sendCode(user: User, email: string): Promise<boolean> {
     let code = new Date().getTime() % 1000000
     code = code < 1000000 ? code + 1000000 : code
 
     try {
-        transporter.sendMail({
+        await transporter.sendMail({
             from: process.env.EMAIL_USER,
             to: email,
             subject: 'EECS Discord Verification Code',
@@ -43,11 +43,11 @@ export function sendCode(user: User, email: string): boolean {
             }
         }, 5 * 60 * 1000)
 
-        console.log(`Code successfully sent to ${email} for user ${user.tag}`)
+        console.log(`Code successfully sent to ${user.tag}`)
 
         return true
     } catch (error) {
-        console.log(`Code failed to send to ${email} for user ${user.tag}`)
+        console.log(`Code failed to send to ${user.tag}`)
         return false
     }
 }
