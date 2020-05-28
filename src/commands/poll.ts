@@ -36,7 +36,7 @@ export class PollCommand extends EECSCommand {
             contents += `${this.emojis[i]} - \`${pollItems[i].slice(1, -1)}\`\n`
         }
 
-        let embed = new MessageEmbed({
+        const embed = new MessageEmbed({
             title: `\`${question}\``,
             description: contents,
             color: 0xfdb515,

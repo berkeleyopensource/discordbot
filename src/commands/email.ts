@@ -22,7 +22,7 @@ export class EmailCommand extends EECSCommand {
     execute(message: CommandoMessage, args: string) {
         if (!this.regex.test(args)) return message.say('> Please enter a valid Berkeley email')
 
-        let success = sendCode(message.author, args)
+        const success = sendCode(message.author, args)
         if (success) {
             return message.say(
                 new MessageEmbed({

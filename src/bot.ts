@@ -1,6 +1,10 @@
 import { CommandoClient } from 'discord.js-commando'
 import * as dotenv from 'dotenv'
 import * as path from 'path'
+import { Guild, Role } from 'discord.js'
+import classMappings from './classMappings'
+
+const MESSAGE_IDS: string[] = ['temp', 'temp', 'temp']
 
 dotenv.config()
 
@@ -25,11 +29,36 @@ client.on('error', e => console.error(e))
 client.on('warn', e => console.warn(e))
 
 client.on('messageReactionAdd', (messageReaction, user) => {
-    // TODO: y'all, i have no idea what the original code was supposed to do. i'll leave this to you guys :P
+    if (user.bot) return
+    const message = messageReaction.message
+    if (MESSAGE_IDS.includes(message.id)) {
+        const role = react_to_role(message.guild, messageReaction.emoji.name)
+        if (role) {
+            const member = message.guild.members.resolve(user)
+            member.roles.add(role)
+        }
+    }
 })
 
 client.on('messageReactionRemove', (messageReaction, user) => {
-    // TODO: y'all, i have no idea what the original code was supposed to do. i'll leave this to you guys :P
+    if (user.bot) return
+    const message = messageReaction.message
+    if (MESSAGE_IDS.includes(message.id)) {
+        const role = react_to_role(message.guild, messageReaction.emoji.name)
+        if (role) {
+            const member = message.guild.members.resolve(user)
+            member.roles.remove(role)
+        }
+    }
 })
+
+function react_to_role(guild: Guild, react_name: string): Role {
+    for (let division in classMappings) {
+        if (Object.keys(classMappings[division]).includes(react_name)) {
+            return guild.roles.cache.find(role => role.name === classMappings[division][react_name])
+        }
+    }
+    return null
+}
 
 client.login(process.env.TOKEN)
