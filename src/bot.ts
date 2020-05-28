@@ -15,6 +15,7 @@ client.registry
     ])
     .registerDefaults()
     .registerCommandsIn(path.join(__dirname, 'commands'))
+    .unregisterCommand(client.registry.findCommands('unknown-command')[0])
 
 client.once('ready', () => {
     console.log('\x1b[36m%s\x1b[0m', 'bot active!')
