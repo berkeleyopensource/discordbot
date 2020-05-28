@@ -1,4 +1,4 @@
-const classMappings: { [key: string]: { [key:string]: string} } = {
+const classMappings: { [key: string]: { [key: string]: string } } = {
     LD: {
         '8_': 'CS 8',
         '10': 'CS 10',

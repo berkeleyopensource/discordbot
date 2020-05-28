@@ -4,9 +4,9 @@ import * as path from 'path'
 import { Guild, Role } from 'discord.js'
 import classMappings from './classMappings'
 
-const MESSAGE_IDS: string[] = ['temp', 'temp', 'temp']
-
 dotenv.config()
+
+const MESSAGE_IDS: string[] = [process.env.MESSAGE_ID_ONE, process.env.MESSAGE_ID_TWO, process.env.MESSAGE_ID_THREE]
 
 const client = new CommandoClient({ commandPrefix: process.env.PREFIX })
 

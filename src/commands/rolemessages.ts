@@ -15,17 +15,23 @@ export class ClassToRoleCommand extends EECSCommand {
     }
 
     async execute(message: CommandoMessage) {
-        await message.say(new MessageEmbed({
-            title: 'EECS Lower Division',
-            color: 0xfdb515,
-        }))
-        await message.say(new MessageEmbed({
-            title: 'CS Upper Division',
-            color: 0x003262,
-        }))
-        return message.say(new MessageEmbed({
-            title: 'EE Upper Division',
-            color: 0xfdb515,
-        }))
+        await message.say(
+            new MessageEmbed({
+                title: 'EECS Lower Division',
+                color: 0xfdb515,
+            })
+        )
+        await message.say(
+            new MessageEmbed({
+                title: 'CS Upper Division',
+                color: 0x003262,
+            })
+        )
+        return message.say(
+            new MessageEmbed({
+                title: 'EE Upper Division',
+                color: 0xfdb515,
+            })
+        )
     }
 }

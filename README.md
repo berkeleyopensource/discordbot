@@ -11,9 +11,17 @@ Before running, add a .env file with the following contents:
 PREFIX=>
 TOKEN=[token]
 GUILD_ID=[guild id]
+SHELL_GUILD_ID=[shell guild id]
 VERIFIED_ROLE_ID=[verified role id]
 ADMIN_ROLE_ID=[admin role id]
+MESSAGE_ID_ONE=[message id one]
+MESSAGE_ID_TWO=[message id two]
+MESSAGE_ID_THREE=[message id three]
 EMAIL_USER=[email]
 EMAIL_PASS=[password]
 ```
-Put something for EMAIL_USER and EMAIL_PASS even if you do not plan on using nodemailer.
+[shell guild id] is for a shell server containing reaction emojis.
+<br/>
+[message id ...] are for the messages with role emojis. 
+<br/>
+[email] and [password] can be left blank if you are not working on verification.

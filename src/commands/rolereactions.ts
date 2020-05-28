@@ -6,15 +6,16 @@ export class ClassToRoleCommand extends EECSCommand {
     constructor(client: CommandoClient) {
         super(client, {
             name: 'rolereactions',
-            group: 'util',
-            memberName: 'classtorole',
-            description: 'temporary command',
+            group: 'mod',
+            memberName: 'rolereactions',
+            description: 'one time use',
             hidden: true,
             adminOnly: true,
         })
     }
 
     execute(message: CommandoMessage) {
+        const SHELLGUILD = this.client.guilds.resolve(process.env.SHELL_GUILD_ID)
         async function addReactions(messageID: string, name: string, mappings: any) {
             const targetMessage = await message.channel.messages.fetch(messageID)
             const rawComparator = (a: string, b: string) => {
@@ -25,7 +26,7 @@ export class ClassToRoleCommand extends EECSCommand {
             }
             for (let emojiName of Object.keys(mappings).sort(rawComparator)) {
                 try {
-                    const emoji = message.guild.emojis.cache.find(emoji => emoji.name === emojiName)
+                    const emoji = SHELLGUILD.emojis.cache.find(emoji => emoji.name === emojiName)
                     await targetMessage.react(emoji.id)
                 } catch (error) {
                     console.log(`Emoji needed for ${emojiName} (${name})`)
@@ -33,9 +34,9 @@ export class ClassToRoleCommand extends EECSCommand {
             }
         }
         Promise.all([
-            addReactions('temp', 'EECS Lower Division', classMappings.LD),
-            addReactions('temp', 'CS Upper Division', classMappings.CSUD),
-            addReactions('temp', 'EE Upper Division', classMappings.EEUD),
+            addReactions(process.env.MESSAGE_ID_ONE, 'EECS Lower Division', classMappings.LD),
+            addReactions(process.env.MESSAGE_ID_TWO, 'CS Upper Division', classMappings.CSUD),
+            addReactions(process.env.MESSAGE_ID_THREE, 'EE Upper Division', classMappings.EEUD),
         ])
         return message.direct('Complete')
     }
