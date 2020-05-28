@@ -9,6 +9,7 @@ export class DadJokeCommand extends EECSCommand {
             group: 'fun',
             memberName: 'dadjoke',
             description: 'gets a random dadjoke',
+            throttleTime: 3,
         })
     }
 

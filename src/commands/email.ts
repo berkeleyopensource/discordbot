@@ -13,12 +13,9 @@ export class EmailCommand extends EECSCommand {
             memberName: 'email',
             description: 'submits email for verification',
             hidden: true,
-            throttling: {
-                usages: 1,
-                duration: 15,
-            },
             dmOnly: true,
             unverifiedOnly: true,
+            throttleTime: 15,
         })
     }
 

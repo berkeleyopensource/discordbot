@@ -10,11 +10,8 @@ export class PollCommand extends EECSCommand {
             group: 'util',
             memberName: 'poll',
             description: 'starts a poll',
-            throttling: {
-                usages: 1,
-                duration: 10,
-            },
-            examples: ['poll {which is the superior cs?} {EECS} {LSCS} {cogsci} {cool socks}'],
+            examples: [`\`${process.env.PREFIX}poll {which is the superior cs?} {EECS} {LSCS} {cogsci} {cool socks}\``],
+            throttleTime: 10,
         })
     }
 
