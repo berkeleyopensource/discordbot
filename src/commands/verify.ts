@@ -10,18 +10,22 @@ export class VerifyCommand extends EECSCommand {
             memberName: 'verify',
             description: 'instructions for verification',
             dmOnly: true,
-            unverifiedOnly: true
+            unverifiedOnly: true,
         })
     }
-    
+
     execute(message: CommandoMessage) {
         return message.say(
             new MessageEmbed({
                 title: 'Verification',
-                description: 'Please submit your Berkeley email for verification.\n' +
+                description:
+                    'Please submit your Berkeley email for verification.\n' +
                     'Your information will not be stored or tied to your Discord account.',
-                color: 0xfdb515
-            }).addField('Instructions:', `Submit your email using\n\`${process.env.PREFIX}email [berkeley.edu email]\`\n\n`)
+                color: 0xfdb515,
+            }).addField(
+                'Instructions:',
+                `Submit your email using\n\`${process.env.PREFIX}email [berkeley.edu email]\`\n\n`
+            )
         )
     }
 }
