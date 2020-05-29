@@ -19,7 +19,6 @@ const classMappings: { [key: string]: { [key: string]: string } } = {
         '168': 'CS 168',
         '169': 'CS 169',
         '170': 'CS 170',
-        '171': 'CS 171',
         '172': 'CS 172',
         '174': 'CS 174',
         '176': 'CS 176',
