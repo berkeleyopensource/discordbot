@@ -2,7 +2,7 @@ import EECSCommand from '../EECSCommand'
 import { MessageEmbed } from 'discord.js'
 import { CommandoClient, CommandoMessage } from 'discord.js-commando'
 
-export class ClassToRoleCommand extends EECSCommand {
+export class RoleMessagesCommand extends EECSCommand {
     constructor(client: CommandoClient) {
         super(client, {
             name: 'rolemessages',
@@ -27,10 +27,17 @@ export class ClassToRoleCommand extends EECSCommand {
                 color: 0x003262,
             })
         )
-        return message.say(
+        await message.say(
             new MessageEmbed({
                 title: 'EE Upper Division',
                 color: 0xfdb515,
+            })
+        )
+        return message.say(
+            new MessageEmbed({
+                title: 'View All Channels',
+                description: '💻: Lower Division\n\n' + '🖥️: Upper Division',
+                color: 0x003262,
             })
         )
     }

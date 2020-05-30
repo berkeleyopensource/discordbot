@@ -14,9 +14,9 @@ export class ClassToRoleCommand extends EECSCommand {
         })
     }
 
-    execute(message: CommandoMessage) {
+    async execute(message: CommandoMessage) {
         const SHELLGUILD = this.client.guilds.resolve(process.env.SHELL_GUILD_ID)
-        async function addReactions(messageID: string, name: string, mappings: any) {
+        async function addReactions(messageID: string, name: string, mappings: any, shell: boolean) {
             const targetMessage = await message.channel.messages.fetch(messageID)
             const rawComparator = (a: string, b: string) => {
                 function raw(s: string) {
@@ -26,18 +26,23 @@ export class ClassToRoleCommand extends EECSCommand {
             }
             for (let emojiName of Object.keys(mappings).sort(rawComparator)) {
                 try {
-                    const emoji = SHELLGUILD.emojis.cache.find(emoji => emoji.name === emojiName)
-                    await targetMessage.react(emoji.id)
+                    if (shell) {
+                        const emoji = SHELLGUILD.emojis.cache.find(emoji => emoji.name === emojiName)
+                        await targetMessage.react(emoji.id)
+                    } else {
+                        targetMessage.react(emojiName)
+                    }
                 } catch (error) {
                     console.log(`Emoji needed for ${emojiName} (${name})`)
                 }
             }
         }
-        Promise.all([
-            addReactions(process.env.MESSAGE_ID_ONE, 'EECS Lower Division', classMappings.LD),
-            addReactions(process.env.MESSAGE_ID_TWO, 'CS Upper Division', classMappings.CSUD),
-            addReactions(process.env.MESSAGE_ID_THREE, 'EE Upper Division', classMappings.EEUD),
+        await Promise.all([
+            addReactions(process.env.MESSAGE_ONE, 'EECS Lower Division', classMappings.LD, true),
+            addReactions(process.env.MESSAGE_TWO, 'CS Upper Division', classMappings.CSUD, true),
+            addReactions(process.env.MESSAGE_THREE, 'EE Upper Division', classMappings.EEUD, true),
+            addReactions(process.env.MESSAGE_ALL, 'Lower/Upper Division View', classMappings.VIEW, false),
         ])
-        return message.direct('Complete')
+        return message.direct('Role Reactions Complete')
     }
 }
