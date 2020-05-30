@@ -19,16 +19,16 @@ export class EmailCommand extends EECSCommand {
         })
     }
 
-    execute(message: CommandoMessage, args: string) {
+    async execute(message: CommandoMessage, args: string) {
         if (!this.regex.test(args)) return message.say('> Please enter a valid Berkeley email')
 
-        const success = sendCode(message.author, args)
+        const success = await sendCode(message.author, args)
         if (success) {
             return message.say(
                 new MessageEmbed({
                     title: `Email Received`,
                     description:
-                        `Verification code successfully sent to \`${args}\`\n\n` +
+                        `Verification code successfully sent for \`${message.author.tag}\`\n\n` +
                         'Once you receive your temporary verification code, please verify using\n' +
                         `\`${process.env.PREFIX}code [verification code]\``,
                     color: 0xfdb515,

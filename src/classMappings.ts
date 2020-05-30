@@ -39,6 +39,10 @@ const classMappings: { [key: string]: { [key: string]: string } } = {
         '127': 'EECS 127',
         '128': 'EE 128',
     },
+    VIEW: {
+        '💻': 'Lower Division',
+        '🖥️': 'Upper Division',
+    },
 }
 
 export default classMappings

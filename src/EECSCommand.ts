@@ -28,8 +28,11 @@ export default class EECSCommand extends Command {
     ): Promise<Message | Message[]> {
         console.log(
             '\x1b[36m%s\x1b[0m',
-            `${message.author.tag} (${message.channel.type}): ${process.env.PREFIX + this.name} ${args}`
+            `${message.author.tag} (${message.channel.type}): ${process.env.PREFIX + this.name} ${
+                message.channel.type != 'dm' ? args : ''
+            }`
         )
+
         const member = this.client.guilds.resolve(process.env.GUILD_ID).member(message.author)
         if (!member) return message.say('> Please join the EECS Discord server before using any commands.')
 
