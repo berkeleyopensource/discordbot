@@ -7,10 +7,11 @@ import classMappings from './classMappings'
 dotenv.config()
 
 const MESSAGE_IDS: string[] = [
+    process.env.MESSAGE_ALL,
     process.env.MESSAGE_ONE,
     process.env.MESSAGE_TWO,
     process.env.MESSAGE_THREE,
-    process.env.MESSAGE_ALL,
+    process.env.MESSAGE_POST,
 ]
 
 const client = new CommandoClient({ commandPrefix: process.env.PREFIX })

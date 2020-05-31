@@ -38,10 +38,11 @@ export class ClassToRoleCommand extends EECSCommand {
             }
         }
         await Promise.all([
-            addReactions(process.env.MESSAGE_ONE, 'EECS Lower Division', classMappings.LD, true),
-            addReactions(process.env.MESSAGE_TWO, 'CS Upper Division', classMappings.CSUD, true),
-            addReactions(process.env.MESSAGE_THREE, 'EE Upper Division', classMappings.EEUD, true),
             addReactions(process.env.MESSAGE_ALL, 'Lower/Upper Division View', classMappings.VIEW, false),
+            addReactions(process.env.MESSAGE_EECS_LD, 'EECS Lower Division', classMappings.LD, true),
+            addReactions(process.env.MESSAGE_CS_UD, 'CS Upper Division', classMappings.CSUD, true),
+            addReactions(process.env.MESSAGE_EE_UD, 'EE Upper Division', classMappings.EEUD, true),
+            addReactions(process.env.MESSAGE_POST, 'Postgraduate', classMappings.POST, false),
         ])
         return message.direct('Role Reactions Complete')
     }
