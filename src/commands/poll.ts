@@ -16,7 +16,6 @@ export class PollCommand extends EECSCommand {
     }
 
     async execute(message: CommandoMessage, args: string) {
-        // i did not bother to look through this code and clean it up other than small things but it seems to work
         const pollItems = args.split(/\s+(?={)/)
         if (pollItems.length < 2) {
             return message.direct(
