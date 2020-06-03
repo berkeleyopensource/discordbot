@@ -35,7 +35,7 @@ export class EmailCommand extends EECSCommand {
                 })
             )
         } else {
-            return message.say(`> Error sending email to \`${args}\``)
+            return message.say(`> Error sending email for \`${message.author.tag}\``)
         }
     }
 }

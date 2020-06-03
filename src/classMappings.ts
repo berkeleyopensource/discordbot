@@ -43,6 +43,10 @@ const classMappings: { [key: string]: { [key: string]: string } } = {
         '💻': 'Lower Division',
         '🖥️': 'Upper Division',
     },
+    POST: {
+        '💡': 'Graduate Student',
+        '🎓': 'Alumni',
+    },
 }
 
 export default classMappings
