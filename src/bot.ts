@@ -31,6 +31,8 @@ client.once('ready', () => {
     console.log('\x1b[36m%s\x1b[0m', 'bot active!')
 })
 
+client.login(process.env.TOKEN)
+
 client.on('error', e => console.error(e))
 client.on('warn', e => console.warn(e))
 
@@ -89,7 +91,7 @@ function changeRole(message: Message, user: User, emojiName: string, addRole: bo
     const role = react_to_role(message.guild, emojiName)
     console.log(
         '\x1b[36m%s\x1b[0m',
-        `${addRole ? 'Added ' : 'Removed '}role ${role.name} for ${user.tag}`
+        `${user.tag}: ${addRole ? 'Added ' : 'Removed '}role ${role.name}`
     )
     if (role) {
         const member = message.guild.members.resolve(user)
@@ -109,5 +111,3 @@ function react_to_role(guild: Guild, react_name: string): Role {
     }
     return null
 }
-
-client.login(process.env.TOKEN)
