@@ -43,7 +43,10 @@ const classMappings: { [key: string]: { [key: string]: string } } = {
         '💻': 'Lower Division',
         '🖥️': 'Upper Division',
     },
-    POST: {
+    STATUS: {
+        '🚀': 'Prefrosh',
+        '🛸': 'Not Berkeley',
+        '✏️': 'Undergraduate',
         '💡': 'Graduate Student',
         '🎓': 'Alumni',
     },

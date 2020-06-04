@@ -7,11 +7,11 @@ import classMappings from './classMappings'
 dotenv.config()
 
 const MESSAGE_IDS: string[] = [
+    process.env.MESSAGE_STATUS,
     process.env.MESSAGE_ALL,
     process.env.MESSAGE_EECS_LD,
     process.env.MESSAGE_CS_UD,
     process.env.MESSAGE_EE_UD,
-    process.env.MESSAGE_POSTGRAD,
 ]
 
 const client = new CommandoClient({ commandPrefix: process.env.PREFIX })
@@ -73,7 +73,6 @@ client.on(
                 {
                     message: message,
                     emoji: { name: packet.d.emoji.name },
-                    count: cachedmReaction ? cachedmReaction.count : 1,
                 },
                 message
             )
@@ -89,10 +88,6 @@ client.on(
 
 function changeRole(message: Message, user: User, emojiName: string, addRole: boolean) {
     const role = react_to_role(message.guild, emojiName)
-    console.log(
-        '\x1b[36m%s\x1b[0m',
-        `${user.tag}: ${addRole ? 'Added ' : 'Removed '}role ${role.name}`
-    )
     if (role) {
         const member = message.guild.members.resolve(user)
         if (addRole) {
@@ -100,6 +95,7 @@ function changeRole(message: Message, user: User, emojiName: string, addRole: bo
         } else {
             member.roles.remove(role)
         }
+        console.log('\x1b[36m%s\x1b[0m', `${user.tag}: ${addRole ? 'Added ' : 'Removed '}role ${role.name}`)
     }
 }
 
