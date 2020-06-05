@@ -63,7 +63,7 @@ export default class EECSCommand extends Command {
         this.throttleMap.set(message.author.id, now)
         setTimeout(() => {
             this.throttleMap.delete(message.author.id)
-            console.log('\x1b[32m%s\x1b[0m', `${message.author.tag}: ${process.env.PREFIX}${this.name} cd refreshed`)
+            //console.log('\x1b[32m%s\x1b[0m', `${message.author.tag}: ${process.env.PREFIX}${this.name} cd refreshed`)
         }, cdTime)
 
         return this.execute(message, args, fromPattern, result)

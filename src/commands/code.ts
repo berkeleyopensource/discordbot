@@ -29,7 +29,9 @@ export class CodeCommand extends EECSCommand {
             return message.say(
                 new MessageEmbed({
                     title: 'Verification Successful',
-                    description: `User \`${message.author.tag}\` has been verified.`,
+                    description:
+                        `User \`${message.author.tag}\` has been verified.\n` +
+                        'Please flair your status and pick the classes you want to see in `#roles`',
                     color: 0xfdb515,
                 })
             )

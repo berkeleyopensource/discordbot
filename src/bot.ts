@@ -1,7 +1,7 @@
 import * as dotenv from 'dotenv'
 import * as path from 'path'
 import { CommandoClient } from 'discord.js-commando'
-import { Guild, Role, TextChannel, MessageReaction, Message, User } from 'discord.js'
+import { Guild, Role, TextChannel, MessageReaction, Message, User, MessageEmbed } from 'discord.js'
 import classMappings from './classMappings'
 
 dotenv.config()
@@ -35,6 +35,19 @@ client.login(process.env.TOKEN)
 
 client.on('error', e => console.error(e))
 client.on('warn', e => console.warn(e))
+
+client.on('guildMemberAdd', member => {
+    member.send(
+        new MessageEmbed({
+            title: 'Welcome to the Berkeley EECS Discord Server',
+            description:
+                'Please read through `#rules` all the way in order to get verified.\n' +
+                'You do not have to verify in order to speak in `#new-student-questions` and `#advice`.\n',
+            color: 0xfdb515,
+        })
+    )
+    console.log('\x1b[36m%s\x1b[0m', `${member.user.tag}: Sent welcome message`)
+})
 
 client.on('messageReactionAdd', (messageReaction, user) => {
     if (user.bot) return
