@@ -1,6 +1,7 @@
 import EECSCommand from '../EECSCommand'
 import { CommandoClient, CommandoMessage } from 'discord.js-commando'
 import { MessageEmbed } from 'discord.js'
+import fetch from 'node-fetch'
 
 export class CourseCommand extends EECSCommand {
     private catalog: { [key: string]: { [key: string]: number } } = null
