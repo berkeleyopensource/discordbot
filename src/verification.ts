@@ -29,7 +29,7 @@ const seq = new Sequelize.Sequelize('database', 'user', null, {
 const db: any = seq.define('verification', {
     hash: Sequelize.TEXT,
     user_tag: Sequelize.TEXT,
-    time_epoch_ms: Sequelize.INTEGER,
+    verify_timestamp: Sequelize.INTEGER,
 })
 db.removeAttribute('id')
 
@@ -78,7 +78,7 @@ export async function verifyCode(user: User, code: number) {
             await db.create({
                 hash: codes[user.id][1],
                 user_tag: user.tag,
-                time_epoch_ms: timestamp,
+                verify_timestamp: timestamp,
             })
             console.log(`[${codes[user.id][1].substring(0, 6)}..., ${user.tag}, ${timestamp}] added to database`)
         } catch (error) {
@@ -102,7 +102,7 @@ export async function queryEmail(args: string) {
         where: {
             hash: rehash,
         },
-        order: [['time_epoch_ms', 'DESC']],
+        order: [['verify_timestamp', 'DESC']],
         limit: 10,
         raw: true,
     })
@@ -113,11 +113,11 @@ export async function queryEmail(args: string) {
  * Limited to 10 due to 1024 character limit of Discord Embeds
  */
 export async function queryUserTag(args: string) {
-    const hashquery = await db.findOne({ where: { user_tag: args }, order: [['time_epoch_ms', 'DESC']], raw: true })
+    const hashquery = await db.findOne({ where: { user_tag: args }, order: [['verify_timestamp', 'DESC']], raw: true })
     if (hashquery) {
         return await db.findAll({
             where: { hash: hashquery.hash },
-            order: [['time_epoch_ms', 'DESC']],
+            order: [['verify_timestamp', 'DESC']],
             limit: 10,
             raw: true,
         })

@@ -21,7 +21,7 @@ export class AltsCommand extends EECSCommand {
         const query = this.regex.test(args) ? await queryEmail(args) : await queryUserTag(args)
         if (query.length) {
             let contents = ''
-            query.every((row: any) => (contents += `\`${row.user_tag}\` \`${new Date(row.time_epoch_ms).toLocaleString()}\`\n`))
+            query.every((row: any) => (contents += `\`${row.user_tag}\` \`${new Date(row.verify_timestamp).toLocaleString()}\`\n`))
             return message.say(
                 new MessageEmbed({
                     title: `Query for \`${args}\``,
