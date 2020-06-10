@@ -30,7 +30,7 @@ export class EmailCommand extends EECSCommand {
                     description:
                         `Verification code successfully sent for \`${message.author.tag}\`\n\n` +
                         'Once you receive your temporary verification code, please verify using\n' +
-                        `\`${process.env.PREFIX}code [verification code]\``,
+                        `\`${process.env.PREFIX}code ***\``,
                     color: 0xfdb515,
                 })
             )

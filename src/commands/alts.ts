@@ -1,5 +1,5 @@
 import EECSCommand from '../EECSCommand'
-import { queryE, queryU } from '../verification'
+import { queryEmail, queryUserTag } from '../verification'
 import { MessageEmbed } from 'discord.js'
 import { CommandoClient, CommandoMessage, Command } from 'discord.js-commando'
 
@@ -18,10 +18,10 @@ export class AltsCommand extends EECSCommand {
     }
 
     async execute(message: CommandoMessage, args: string) {
-        const query = this.regex.test(args) ? await queryE(args) : await queryU(args)
+        const query = this.regex.test(args) ? await queryEmail(args) : await queryUserTag(args)
         if (query.length) {
             let contents = ''
-            query.every((row: any) => (contents += `\`${row.user_tag}\` \`${new Date(row.time)}\`\n`))
+            query.every((row: any) => (contents += `\`${row.user_tag}\` \`${new Date(row.time_epoch_ms).toLocaleString()}\`\n`))
             return message.say(
                 new MessageEmbed({
                     title: `Query for \`${args}\``,

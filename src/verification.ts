@@ -17,7 +17,6 @@ const transporter = nodemailer.createTransport({
 })
 
 const seq = new Sequelize.Sequelize('database', 'user', null, {
-    host: 'localhost',
     dialect: 'sqlite',
     storage: './data.sqlite',
     logging: false,
@@ -30,7 +29,7 @@ const seq = new Sequelize.Sequelize('database', 'user', null, {
 const db: any = seq.define('verification', {
     hash: Sequelize.TEXT,
     user_tag: Sequelize.TEXT,
-    time: Sequelize.INTEGER,
+    time_epoch_ms: Sequelize.INTEGER,
 })
 db.removeAttribute('id')
 
@@ -51,7 +50,7 @@ export async function sendCode(user: User, email: string): Promise<boolean> {
             subject: 'EECS Discord Verification Code',
             text: `Please use the code ${code} to complete your verification.\nThis code will expire in five minutes.`,
         })
-        console.log(`Code successfully sent to ${user.tag}`)
+        console.log(`Code successfully sent for ${user.tag}`)
         const md5 = crypto.createHash('md5')
         const hashed = md5.update(process.env.PEPPER + email).digest('hex')
         codes[user.id] = [code, hashed]
@@ -75,14 +74,16 @@ export async function sendCode(user: User, email: string): Promise<boolean> {
 export async function verifyCode(user: User, code: number) {
     if (codes[user.id][0] == code) {
         try {
+            const timestamp = Date.now()
             await db.create({
                 hash: codes[user.id][1],
                 user_tag: user.tag,
-                time: Date.now(),
+                time_epoch_ms: timestamp,
             })
-            console.log(`Database updated for ${user.tag}`)
+            console.log(`[${codes[user.id][1].substring(0, 6)}..., ${user.tag}, ${timestamp}] added to database`)
         } catch (error) {
-            console.log('\x1b[31m%s\x1b[0m', `Database not updated for ${user.tag}`)
+            console.log('\x1b[31m%s\x1b[0m', `Error updating database for ${user.tag}`)
+            console.log(error)
         }
         delete codes[user.id]
         return true
@@ -91,31 +92,33 @@ export async function verifyCode(user: User, code: number) {
 }
 
 /**
- * queries for alts
+ * Queries for alts using an email
+ * Limited to 10 due to 1024 character limit of Discord Embeds
  */
-export async function queryE(args: string) {
+export async function queryEmail(args: string) {
     const md5 = crypto.createHash('md5')
     const rehash = md5.update(process.env.PEPPER + args).digest('hex')
     return await db.findAll({
         where: {
             hash: rehash,
         },
-        order: [['time', 'DESC']],
-        limit: 3,
+        order: [['time_epoch_ms', 'DESC']],
+        limit: 10,
         raw: true,
     })
 }
 
 /**
- * queries for alts
+ * Queries for alts using a user tag
+ * Limited to 10 due to 1024 character limit of Discord Embeds
  */
-export async function queryU(args: string) {
-    const hashquery = await db.findOne({ where: { user_tag: args }, order: [['time', 'DESC']], raw: true })
+export async function queryUserTag(args: string) {
+    const hashquery = await db.findOne({ where: { user_tag: args }, order: [['time_epoch_ms', 'DESC']], raw: true })
     if (hashquery) {
         return await db.findAll({
             where: { hash: hashquery.hash },
-            order: [['time', 'DESC']],
-            limit: 3,
+            order: [['time_epoch_ms', 'DESC']],
+            limit: 10,
             raw: true,
         })
     }
