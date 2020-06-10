@@ -3,3 +3,4 @@ nodemon.json
 node_modules
 .DS_Store
 dist/
+*.sqlite

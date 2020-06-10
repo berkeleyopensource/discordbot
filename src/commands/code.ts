@@ -20,7 +20,7 @@ export class CodeCommand extends EECSCommand {
         if (!args || isNaN(Number(args))) {
             return message.say('> Please enter a valid code')
         }
-        if (verifyCode(message.author, Number(args))) {
+        if (await verifyCode(message.author, Number(args))) {
             await this.client.guilds
                 .resolve(process.env.GUILD_ID)
                 .member(message.author)

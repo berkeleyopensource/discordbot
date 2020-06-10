@@ -27,6 +27,8 @@ client.registry
     .registerCommandsIn(path.join(__dirname, 'commands'))
     .unregisterCommand(client.registry.findCommands('unknown-command')[0])
 
+console.log('Commands loaded!')
+
 client.once('ready', () => {
     console.log('\x1b[36m%s\x1b[0m', 'bot active!')
 })
@@ -40,9 +42,7 @@ client.on('guildMemberAdd', member => {
     member.send(
         new MessageEmbed({
             title: 'Welcome to the Berkeley EECS Discord Server',
-            description:
-                'Please read through `#rules` all the way in order to get verified.\n' +
-                'You do not have to verify in order to speak in `#new-student-questions` and `#advice`.\n',
+            description: 'Please read through `#rules` all the way in order to get verified.\n',
             color: 0xfdb515,
         })
     )

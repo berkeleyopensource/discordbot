@@ -34,20 +34,21 @@ export default class EECSCommand extends Command {
         )
 
         const member = this.client.guilds.resolve(process.env.GUILD_ID).member(message.author)
-        if (!member) return message.say('> Please join the EECS Discord server before using any commands.')
+        if (!member)
+            return message.say(
+                '> You were not found in the server cache.\n' +
+                    '> Please speak in or rejoin the EECS Discord server before using any commands.'
+            )
 
         if (this.dmOnly && message.channel.type != 'dm') {
             return message.say('> You can only use this command in a DM.')
         }
 
         if (this.unverifiedOnly && member.roles.cache.has(process.env.VERIFIED_ROLE_ID)) {
-            return message.say(`> User ${message.author.tag} is already verified.`)
+            return message.say(`> User \`${message.author.tag}\` is already verified.`)
         }
 
-        if (
-            this.adminOnly &&
-            !this.client.guilds.resolve(process.env.GUILD_ID).roles.cache.has(process.env.ADMIN_ROLE_ID)
-        ) {
+        if (this.adminOnly && !member.roles.cache.has(process.env.ADMIN_ROLE_ID)) {
             return message.say('> You must be a server admin to use this command')
         }
 
@@ -63,7 +64,6 @@ export default class EECSCommand extends Command {
         this.throttleMap.set(message.author.id, now)
         setTimeout(() => {
             this.throttleMap.delete(message.author.id)
-            //console.log('\x1b[32m%s\x1b[0m', `${message.author.tag}: ${process.env.PREFIX}${this.name} cd refreshed`)
         }, cdTime)
 
         return this.execute(message, args, fromPattern, result)
