@@ -20,13 +20,9 @@ export class VerifyCommand extends EECSCommand {
                 title: 'Verification',
                 description:
                     'Please submit your Berkeley email for verification.\n' +
-                    'Your information will not be stored or tied to your Discord account (Check out the source code [here](https://github.com/berkeleyopensource/discordbot)).\n' +
-                    'If you are not from Berkeley or have any issues with verification, direct message a moderator.',
+                    'If you are not from Berkeley or have any issues with verification, please direct message a moderator.',
                 color: 0xfdb515,
-            }).addField(
-                'Instructions:',
-                `Submit your email using\n\`${process.env.PREFIX}email [berkeley.edu email]\`\n\n`
-            )
+            }).addField('Instructions:', `Submit your email using\n\`${process.env.PREFIX}email ***@berkeley.edu\`\n\n`)
         )
     }
 }

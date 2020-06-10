@@ -33,7 +33,7 @@ export class ClassToRoleCommand extends EECSCommand {
                         targetMessage.react(emojiName)
                     }
                 } catch (error) {
-                    console.log(`Emoji needed for ${emojiName} (${name})`)
+                    console.log('\x1b[31m%s\x1b[0m', `Emoji needed for ${emojiName} (${name})`)
                 }
             }
         }
