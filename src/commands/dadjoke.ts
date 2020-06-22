@@ -1,6 +1,6 @@
 import EECSCommand from '../EECSCommand'
-import { CommandoClient, CommandoMessage } from 'discord.js-commando'
 import fetch from 'node-fetch'
+import { CommandoClient, CommandoMessage } from 'discord.js-commando'
 
 export class DadJokeCommand extends EECSCommand {
     constructor(client: CommandoClient) {

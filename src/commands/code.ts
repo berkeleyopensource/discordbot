@@ -1,7 +1,7 @@
 import EECSCommand from '../EECSCommand'
+import { CommandoClient, CommandoMessage } from 'discord.js-commando'
 import { MessageEmbed } from 'discord.js'
 import { verifyCode } from '../verification'
-import { CommandoClient, CommandoMessage } from 'discord.js-commando'
 
 export class CodeCommand extends EECSCommand {
     constructor(client: CommandoClient) {

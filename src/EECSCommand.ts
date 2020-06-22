@@ -1,4 +1,4 @@
-import { Command, CommandoClient, CommandInfo, CommandoMessage, ArgumentCollectorResult } from 'discord.js-commando'
+import { ArgumentCollectorResult, Command, CommandInfo, CommandoClient, CommandoMessage } from 'discord.js-commando'
 import { Message } from 'discord.js'
 
 /**
@@ -33,12 +33,18 @@ export default class EECSCommand extends Command {
             }`
         )
 
-        const member = this.client.guilds.resolve(process.env.GUILD_ID).member(message.author)
-        if (!member)
+        const clientGuild = this.client.guilds.resolve(process.env.GUILD_ID)
+        if (!clientGuild) {
+            return message.say('> You do not seem to be in the EECS Discord server')
+        }
+
+        const member = clientGuild.member(message.author)
+        if (!member) {
             return message.say(
                 '> You were not found in the server cache.\n' +
                     '> Please speak in or rejoin the EECS Discord server before using any commands.'
             )
+        }
 
         if (this.dmOnly && message.channel.type != 'dm') {
             return message.say('> You can only use this command in a DM.')
@@ -49,7 +55,7 @@ export default class EECSCommand extends Command {
         }
 
         if (this.adminOnly && !member.roles.cache.has(process.env.ADMIN_ROLE_ID)) {
-            return message.say('> You must be a server admin to use this command')
+            return message.say('> You must be a server admin to use this command.')
         }
 
         const now = Date.now()

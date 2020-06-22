@@ -1,7 +1,7 @@
 import EECSCommand from '../EECSCommand'
-import { sendCode } from '../verification'
-import { MessageEmbed } from 'discord.js'
 import { CommandoClient, CommandoMessage } from 'discord.js-commando'
+import { MessageEmbed } from 'discord.js'
+import { sendCode } from '../verification'
 
 export class EmailCommand extends EECSCommand {
     private readonly regex = /^[A-z0-9._%+-]+@berkeley\.edu$/

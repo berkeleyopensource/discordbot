@@ -20,13 +20,15 @@
   "homepage": "https://github.com/berkeleyopensource/discordbot#readme",
   "dependencies": {
     "@types/bluebird": "^3.5.32",
+    "@types/cron": "^1.7.2",
     "@types/validator": "^13.0.0",
+    "cron": "^1.8.2",
     "discord.js": "^12.2.0",
     "discord.js-commando": "github:discordjs/Commando",
     "dotenv": "^8.2.0",
     "node-fetch": "^2.6.0",
-    "nodemailer": "^6.4.8",
-    "sequelize": "^5.21.12",
+    "nodemailer": "^6.4.10",
+    "sequelize": "^5.21.13",
     "sqlite3": "^4.2.0"
   },
   "devDependencies": {

@@ -1,8 +1,8 @@
+import * as crypto from 'crypto'
 import * as dotenv from 'dotenv'
 import * as nodemailer from 'nodemailer'
 import { User } from 'discord.js'
-import * as Sequelize from 'sequelize'
-import * as crypto from 'crypto'
+import { verificationDB } from './sequelizeDB'
 
 dotenv.config()
 
@@ -15,25 +15,6 @@ const transporter = nodemailer.createTransport({
         pass: process.env.EMAIL_PASS || '',
     },
 })
-
-const seq = new Sequelize.Sequelize('database', 'user', null, {
-    dialect: 'sqlite',
-    storage: './data.sqlite',
-    logging: false,
-    define: {
-        timestamps: false,
-        freezeTableName: true,
-    },
-})
-
-const db: any = seq.define('verification', {
-    hash: Sequelize.TEXT,
-    user_tag: Sequelize.TEXT,
-    verify_timestamp: Sequelize.INTEGER,
-})
-db.removeAttribute('id')
-
-db.sync().then(console.log('Database synced!'))
 
 /**
  * Generates, stores, and sends a verification code to the email
@@ -55,7 +36,7 @@ export async function sendCode(user: User, email: string): Promise<boolean> {
         const hashed = md5.update(process.env.PEPPER + email).digest('hex')
         codes[user.id] = [code, hashed]
         setTimeout(() => {
-            if (codes[user.id][0] == code) {
+            if (codes[user.id] && codes[user.id][0] == code) {
                 delete codes[user.id]
                 console.log(`User ${user.tag} deleted from queue`)
             }
@@ -75,7 +56,7 @@ export async function verifyCode(user: User, code: number) {
     if (codes[user.id] && codes[user.id][0] == code) {
         try {
             const timestamp = Date.now()
-            await db.create({
+            await verificationDB.create({
                 hash: codes[user.id][1],
                 user_tag: user.tag,
                 verify_timestamp: timestamp,
@@ -89,38 +70,4 @@ export async function verifyCode(user: User, code: number) {
         return true
     }
     return false
-}
-
-/**
- * Queries for alts using an email
- * Limited to 10 due to 1024 character limit of Discord Embeds
- */
-export async function queryEmail(args: string) {
-    const md5 = crypto.createHash('md5')
-    const rehash = md5.update(process.env.PEPPER + args).digest('hex')
-    return await db.findAll({
-        where: {
-            hash: rehash,
-        },
-        order: [['verify_timestamp', 'DESC']],
-        limit: 10,
-        raw: true,
-    })
-}
-
-/**
- * Queries for alts using a user tag
- * Limited to 10 due to 1024 character limit of Discord Embeds
- */
-export async function queryUserTag(args: string) {
-    const hashquery = await db.findOne({ where: { user_tag: args }, order: [['verify_timestamp', 'DESC']], raw: true })
-    if (hashquery) {
-        return await db.findAll({
-            where: { hash: hashquery.hash },
-            order: [['verify_timestamp', 'DESC']],
-            limit: 10,
-            raw: true,
-        })
-    }
-    return []
 }

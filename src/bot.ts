@@ -1,8 +1,19 @@
 import * as dotenv from 'dotenv'
 import * as path from 'path'
-import { CommandoClient } from 'discord.js-commando'
-import { Guild, Role, TextChannel, MessageReaction, Message, User, MessageEmbed } from 'discord.js'
 import classMappings from './classMappings'
+import { CommandoClient } from 'discord.js-commando'
+import { emoteDB, emoteDBFull } from './sequelizeDB'
+import {
+    Guild,
+    Role,
+    TextChannel,
+    MessageReaction,
+    Message,
+    User,
+    MessageEmbed,
+    Collection,
+    GuildEmoji,
+} from 'discord.js'
 
 dotenv.config()
 
@@ -14,7 +25,7 @@ const MESSAGE_IDS: string[] = [
     process.env.MESSAGE_EE_UD,
 ]
 
-const client = new CommandoClient({ commandPrefix: process.env.PREFIX })
+export const client = new CommandoClient({ commandPrefix: process.env.PREFIX })
 
 client.registry
     .registerGroups([
@@ -29,7 +40,10 @@ client.registry
 
 console.log('Commands loaded!')
 
-client.once('ready', () => {
+let guildEmojis: Collection<string, GuildEmoji>
+
+client.once('ready', async () => {
+    const updated = await updateEmojiDB()
     console.log('\x1b[36m%s\x1b[0m', 'bot active!')
 })
 
@@ -39,6 +53,7 @@ client.on('error', e => console.error(e))
 client.on('warn', e => console.warn(e))
 
 client.on('guildMemberAdd', member => {
+    if (member.guild.id != process.env.GUILD_ID) return
     member.send(
         new MessageEmbed({
             title: 'Welcome to the Berkeley EECS Discord Server',
@@ -49,15 +64,38 @@ client.on('guildMemberAdd', member => {
     console.log('\x1b[36m%s\x1b[0m', `${member.user.tag}: Sent welcome message`)
 })
 
-client.on('messageReactionAdd', (messageReaction, user) => {
-    if (user.bot) return
+client.on('message', async message => {
+    if (message.author.bot || !message.guild || message.guild.id != process.env.GUILD_ID) return
+    const matches = message.content.match(/<:.+?:\d{18}>/g)
+    if (matches && matches.length) {
+        for (const emojiUnicode of matches) {
+            const emojiName = emojiUnicode.match(/(?<=:)(.+)(?=:)/g)[0]
+            const emojiID = emojiUnicode.match(/(?<=[^<]:)(.+)(?=>)/g)[0]
+            if (guildEmojis.has(emojiID)) {
+                await emoteDB.create({
+                    emoji_name: emojiName,
+                    timestamp: message.createdTimestamp,
+                })
+            }
+        }
+    }
+})
+
+client.on('messageReactionAdd', async (messageReaction, user) => {
+    if (user.bot || messageReaction.message.guild.id != process.env.GUILD_ID) return
     if (MESSAGE_IDS.includes(messageReaction.message.id)) {
         return changeRole(messageReaction.message, user, messageReaction.emoji.name, true)
+    }
+    if (guildEmojis.has(messageReaction.emoji.id)) {
+        await emoteDB.create({
+            emoji_name: messageReaction.emoji.name,
+            timestamp: Date.now(),
+        })
     }
 })
 
 client.on('messageReactionRemove', (messageReaction, user) => {
-    if (user.bot) return
+    if (user.bot || messageReaction.message.guild.id != process.env.GUILD_ID) return
     if (MESSAGE_IDS.includes(messageReaction.message.id)) {
         return changeRole(messageReaction.message, user, messageReaction.emoji.name, false)
     }
@@ -99,6 +137,36 @@ client.on(
     }
 )
 
+client.on('emojiCreate', async emoji => {
+    console.log(`${emoji.name} created`)
+    await emoteDBFull.create({
+        emoji_name: emoji.name,
+        count: 0,
+    })
+})
+
+client.on('emojiDelete', async emoji => {
+    console.log(`${emoji.name} deleted from server`)
+    await emoteDBFull
+        .findOne({
+            where: { emoji_name: emoji.name },
+        })
+        .then((result: any) => result.destroy())
+})
+
+client.on('emojiUpdate', async (oldEmoji, newEmoji) => {
+    console.log(`${oldEmoji.name} updated to ${newEmoji.name}`)
+    await emoteDBFull
+        .findOne({
+            where: { emoji_name: oldEmoji.name },
+        })
+        .then((result: any) => result.destroy())
+    await emoteDBFull.create({
+        emoji_name: newEmoji.name,
+        count: 0,
+    })
+})
+
 function changeRole(message: Message, user: User, emojiName: string, addRole: boolean) {
     const role = react_to_role(message.guild, emojiName)
     if (role) {
@@ -119,4 +187,27 @@ function react_to_role(guild: Guild, react_name: string): Role {
         }
     }
     return null
+}
+
+export async function updateEmojiDB() {
+    guildEmojis = client.guilds.resolve(process.env.GUILD_ID).emojis.cache
+    const updated = []
+    for (const pair of guildEmojis) {
+        const guildEmoji = pair[1]
+        if (
+            (
+                await emoteDBFull.findOrCreate({
+                    where: { emoji_name: guildEmoji.name },
+                    defaults: {
+                        emoji_name: guildEmoji.name,
+                        count: 0,
+                    },
+                })
+            )[1]
+        ) {
+            updated.push(guildEmoji.name)
+        }
+    }
+    console.log('Emote database updated: ', updated)
+    return updated
 }

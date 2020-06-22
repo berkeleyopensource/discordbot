@@ -1,6 +1,6 @@
 import EECSCommand from '../EECSCommand'
-import { MessageEmbed } from 'discord.js'
 import { CommandoClient, CommandoMessage } from 'discord.js-commando'
+import { MessageEmbed } from 'discord.js'
 
 export class RoleMessagesCommand extends EECSCommand {
     constructor(client: CommandoClient) {

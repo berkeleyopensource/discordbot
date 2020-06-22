@@ -1,6 +1,6 @@
 import EECSCommand from '../EECSCommand'
-import { MessageEmbed, Message } from 'discord.js'
 import { CommandoClient, CommandoMessage } from 'discord.js-commando'
+import { Message, MessageEmbed } from 'discord.js'
 
 export class PollCommand extends EECSCommand {
     private readonly emojis = ['0⃣', '1⃣', '2⃣', '3⃣', '4⃣', '5⃣', '6⃣', '7⃣', '8⃣', '9⃣']

@@ -1,6 +1,6 @@
+import classMappings from '../classMappings'
 import EECSCommand from '../EECSCommand'
 import { CommandoClient, CommandoMessage } from 'discord.js-commando'
-import classMappings from '../classMappings'
 
 export class ClassToRoleCommand extends EECSCommand {
     constructor(client: CommandoClient) {
