@@ -82,7 +82,7 @@ client.on('message', async message => {
 })
 
 client.on('messageReactionAdd', async (messageReaction, user) => {
-    if (user.bot || messageReaction.message.guild.id != process.env.GUILD_ID) return
+    if (user.bot || !messageReaction.message.guild || messageReaction.message.guild.id != process.env.GUILD_ID) return
     if (MESSAGE_IDS.includes(messageReaction.message.id)) {
         return changeRole(messageReaction.message, user, messageReaction.emoji.name, true)
     }
