@@ -52,18 +52,6 @@ client.login(process.env.TOKEN)
 client.on('error', e => console.error(e))
 client.on('warn', e => console.warn(e))
 
-client.on('guildMemberAdd', member => {
-    if (member.guild.id != process.env.GUILD_ID) return
-    member.send(
-        new MessageEmbed({
-            title: 'Welcome to the Berkeley EECS Discord Server',
-            description: 'Please read through `#rules` all the way in order to get verified.\n',
-            color: 0xfdb515,
-        })
-    )
-    console.log('\x1b[36m%s\x1b[0m', `${member.user.tag}: Sent welcome message`)
-})
-
 client.on('message', async message => {
     if (message.author.bot || !message.guild || message.guild.id != process.env.GUILD_ID) return
     const matches = message.content.match(/<:.+?:\d{18}>/g)

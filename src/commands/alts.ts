@@ -1,5 +1,4 @@
 import * as crypto from 'crypto'
-import * as Sequelize from 'sequelize'
 import EECSCommand from '../EECSCommand'
 import { CommandoClient, CommandoMessage } from 'discord.js-commando'
 import { MessageEmbed } from 'discord.js'

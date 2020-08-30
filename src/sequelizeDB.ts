@@ -1,8 +1,8 @@
-import * as dotenv from 'dotenv';
-import * as Sequelize from 'sequelize';
-import { client, updateEmojiDB } from './bot';
-import { CronJob } from 'cron';
-import { MessageEmbed, TextChannel } from 'discord.js';
+import * as dotenv from 'dotenv'
+import * as Sequelize from 'sequelize'
+import { client, updateEmojiDB } from './bot'
+import { CronJob } from 'cron'
+import { MessageEmbed, TextChannel } from 'discord.js'
 
 dotenv.config()
 

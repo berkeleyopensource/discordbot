@@ -17,10 +17,10 @@ export class VerifyCommand extends EECSCommand {
     execute(message: CommandoMessage) {
         return message.say(
             new MessageEmbed({
-                title: 'Verification',
+                title: 'Verification Instructions',
                 description:
                     'Please submit your Berkeley email for verification.\n' +
-                    'If you are not from Berkeley or have any issues with verification, please direct message a moderator.',
+                    'If you have any issues with verification, please direct message a moderator.',
                 color: 0xfdb515,
             }).addField('Instructions:', `Submit your email using\n\`${process.env.PREFIX}email ***@berkeley.edu\`\n\n`)
         )

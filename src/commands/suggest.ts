@@ -34,15 +34,14 @@ export class SuggestCommand extends EECSCommand {
                         let contents = this.topicSuggestions(topic)
                         return await message.say(
                             new MessageEmbed({
-                                'title': `\`${topicName}\``,
-                                color: 0x003262
+                                title: `\`${topicName}\``,
+                                color: 0x003262,
                             }).addField('Suggestions:', contents)
                         )
                     } else {
                         return await message.say(`> Current no suggestions for topic \`${topicName}\``)
                     }
                 }
-                
             } else {
                 return message.say(`> \`${topicName}\` topic not found.`)
             }
@@ -54,10 +53,12 @@ export class SuggestCommand extends EECSCommand {
                 }
                 return await message.say(
                     new MessageEmbed({
-                    'title': 'Currently open topics:',
-                    'description': 'Use \`>suggest [topic]\` to view individual suggestions\nSuggest with \`>suggest [topic] [suggestion]\`',
-                    color: 0xfdb515,
-                }).addField('Topics:', contents)
+                        title: 'Currently open topics:',
+                        description:
+                            `Use \`${process.env.PREFIX}suggest [topic]\` to view individual suggestions\n` +
+                            `Suggest with \`${process.env.PREFIX}suggest [topic] [suggestion]\``,
+                        color: 0xfdb515,
+                    }).addField('Topics:', contents)
                 )
             } else {
                 return message.say('> No topics open for suggestions.')
@@ -65,7 +66,7 @@ export class SuggestCommand extends EECSCommand {
         }
     }
 
-    topicSuggestions(topic: Map<string, number>) : string {
+    topicSuggestions(topic: Map<string, number>): string {
         let sorted = Array.from(topic.entries()).sort((a, b) => b[1] - a[1])
         let contents = ''
         for (let [name, number] of sorted) {
@@ -73,5 +74,4 @@ export class SuggestCommand extends EECSCommand {
         }
         return contents
     }
-
 }

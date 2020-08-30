@@ -1,10 +1,9 @@
 import EECSCommand from '../EECSCommand'
 import { CommandoClient, CommandoMessage } from 'discord.js-commando'
 import { MessageEmbed, Message } from 'discord.js'
-export let topics : any = new Map()
+export let topics: any = new Map()
 
 export class CollectCommand extends EECSCommand {
-    
     constructor(client: CommandoClient) {
         super(client, {
             name: 'collect',
@@ -31,7 +30,8 @@ export class CollectCommand extends EECSCommand {
                 confirmMessage
                     .awaitReactions(
                         (reaction, user) =>
-                            user.id === message.author.id && (reaction.emoji.name === '👍' || reaction.emoji.name === '👎'),
+                            user.id === message.author.id &&
+                            (reaction.emoji.name === '👍' || reaction.emoji.name === '👎'),
                         { max: 1, time: 10000 }
                     )
                     .then(async collection => {
@@ -40,22 +40,24 @@ export class CollectCommand extends EECSCommand {
                                 await message.direct(`No suggestions for poll \`${topicName}\``)
                             } else {
                                 let contents = ''
-                                let pollCommand = `\`>poll {${topicName}}`
+                                let pollCommand = `\`${process.env.PREFIX}poll ${topicName}`
                                 let sorted = Array.from(topic.entries()).sort((a, b) => b[1] - a[1])
                                 let i = 0
                                 for (let [name, number] of sorted) {
                                     contents += `\`${name}\` \`(${number} times)\`\n`
                                     if (i < 10) {
-                                        pollCommand += ` {${name}}`
+                                        pollCommand += ` | ${name}`
                                         i += 1
                                     }
                                 }
-                                pollCommand += '\`'
+                                pollCommand += '`'
                                 await message.direct(
                                     new MessageEmbed({
-                                    'title': `Collected suggestions for \`${topicName}\``,
-                                    color: 0xfdb515,
-                                }).addField('Topics:', contents).addField('Run a poll with the top ten:', pollCommand)
+                                        title: `Collected suggestions for \`${topicName}\``,
+                                        color: 0xfdb515,
+                                    })
+                                        .addField('Topics:', contents)
+                                        .addField('Run a poll with the top ten:', pollCommand)
                                 )
                             }
                             topics.delete(topicName)
@@ -77,7 +79,8 @@ export class CollectCommand extends EECSCommand {
                 confirmMessage
                     .awaitReactions(
                         (reaction, user) =>
-                            user.id === message.author.id && (reaction.emoji.name === '👍' || reaction.emoji.name === '👎'),
+                            user.id === message.author.id &&
+                            (reaction.emoji.name === '👍' || reaction.emoji.name === '👎'),
                         { max: 1, time: 10000 }
                     )
                     .then(async collection => {
@@ -101,13 +104,12 @@ export class CollectCommand extends EECSCommand {
                 for (let key of topics.keys()) {
                     contents += `\`${key}\` \`(${topics.get(key).size} suggestions)\`\n`
                 }
-                console.log(contents)
                 return await message.say(
                     new MessageEmbed({
-                    'title': 'Currently collecting suggestions:',
-                    'description': 'Run \`>suggest [topic]\` to see individual suggestions',
-                    color: 0xfdb515,
-                }).addField('Topics:', contents)
+                        title: 'Currently collecting suggestions:',
+                        description: `Run \`${process.env.PREFIX}suggest [topic]\` to see individual suggestions`,
+                        color: 0xfdb515,
+                    }).addField('Topics:', contents)
                 )
             } else {
                 return message.say('> Currently collecting suggestions for no topics.')
