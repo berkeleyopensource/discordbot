@@ -38,7 +38,7 @@ export class PollCommand extends EECSCommand {
         }).setAuthor(message.author.username, message.author.avatarURL({ dynamic: true }))
 
         await message.direct(embed)
-        await message.direct(`> Your input: \`${process.env.PREFIX}${message.content}\``)
+        await message.direct(`> Your input: \`${message.content}\``)
         const confirmMessage = (await message.direct('> Does this look good?')) as Message
         await confirmMessage.react('👍')
         await confirmMessage.react('👎')
