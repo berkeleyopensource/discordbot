@@ -22,7 +22,7 @@ export class EmailCommand extends EECSCommand {
     async execute(message: CommandoMessage, args: string) {
         if (!this.regex.test(args)) return message.say('> Please enter a valid Berkeley email')
 
-        const success = await sendCode(message.author, args)
+        const success = await sendCode(message.author, args.toLowerCase())
         if (success) {
             return message.say(
                 new MessageEmbed({

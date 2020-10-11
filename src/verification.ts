@@ -23,7 +23,10 @@ const transporter = nodemailer.createTransport({
 export async function sendCode(user: User, email: string): Promise<boolean> {
     let code = new Date().getTime() % 1000000
     code = code < 1000000 ? code + 1000000 : code
-
+    const query = await queryEmail(email)
+    if (query.length) {
+        return false
+    }
     try {
         await transporter.sendMail({
             from: process.env.EMAIL_USER,
@@ -70,4 +73,17 @@ export async function verifyCode(user: User, code: number) {
         return true
     }
     return false
+}
+
+async function queryEmail(args: string) {
+    const md5 = crypto.createHash('md5')
+    const rehash = md5.update(process.env.PEPPER + args).digest('hex')
+    return await verificationDB.findAll({
+        where: {
+            hash: rehash,
+        },
+        order: [['verify_timestamp', 'DESC']],
+        limit: 10,
+        raw: true,
+    })
 }
