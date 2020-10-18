@@ -1,6 +1,6 @@
 import EECSCommand from '../EECSCommand'
 import { CommandoClient, CommandoMessage } from 'discord.js-commando'
-import { MessageEmbed, Message } from 'discord.js'
+import { MessageEmbed } from 'discord.js'
 import { topics } from './collect'
 
 export class SuggestCommand extends EECSCommand {

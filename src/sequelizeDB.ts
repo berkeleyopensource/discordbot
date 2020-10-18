@@ -18,7 +18,6 @@ export const seq = new Sequelize.Sequelize('database', 'user', null, {
 
 export const verificationDB: any = seq.define('verification', {
     hash: Sequelize.TEXT,
-    user_tag: Sequelize.TEXT,
     verify_timestamp: Sequelize.INTEGER,
 })
 verificationDB.removeAttribute('id')

@@ -1,6 +1,6 @@
 import EECSCommand from '../EECSCommand'
 import { CommandoClient, CommandoMessage } from 'discord.js-commando'
-import { MessageEmbed, Message } from 'discord.js'
+import { Message, MessageEmbed } from 'discord.js'
 export let topics: any = new Map()
 
 export class CollectCommand extends EECSCommand {

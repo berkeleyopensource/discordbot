@@ -1,7 +1,7 @@
 import EECSCommand from '../EECSCommand'
-import { CommandoClient, CommandoMessage } from 'discord.js-commando'
-import { MessageEmbed, Message, TextChannel } from 'discord.js'
 import { client } from '../bot'
+import { CommandoClient, CommandoMessage } from 'discord.js-commando'
+import { Message, MessageEmbed, TextChannel } from 'discord.js'
 const fields: Map<string, string> = new Map()
 
 export class EventCommand extends EECSCommand {

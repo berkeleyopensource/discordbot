@@ -35,8 +35,9 @@ export async function sendCode(user: User, email: string): Promise<boolean> {
             text: `Please use the code ${code} to complete your verification.\nThis code will expire in five minutes.`,
         })
         console.log(`Code successfully sent for ${user.tag}`)
-        const md5 = crypto.createHash('md5')
-        const hashed = md5.update(process.env.PEPPER + email).digest('hex')
+
+        const sha = crypto.createHash('sha256')
+        const hashed = sha.update(process.env.PEPPER + email).digest('hex')
         codes[user.id] = [code, hashed]
         setTimeout(() => {
             if (codes[user.id] && codes[user.id][0] == code) {
@@ -61,10 +62,9 @@ export async function verifyCode(user: User, code: number) {
             const timestamp = Date.now()
             await verificationDB.create({
                 hash: codes[user.id][1],
-                user_tag: user.tag,
                 verify_timestamp: timestamp,
             })
-            console.log(`[${codes[user.id][1].substring(0, 6)}..., ${user.tag}, ${timestamp}] added to database`)
+            console.log(`[${codes[user.id][1].substring(0, 6)}..., ${timestamp}] for ${user.tag} added to database`)
         } catch (error) {
             console.log('\x1b[31m%s\x1b[0m', `Error updating database for ${user.tag}`)
             console.log(error)
@@ -76,8 +76,8 @@ export async function verifyCode(user: User, code: number) {
 }
 
 async function queryEmail(args: string) {
-    const md5 = crypto.createHash('md5')
-    const rehash = md5.update(process.env.PEPPER + args).digest('hex')
+    const sha = crypto.createHash('sha256')
+    const rehash = sha.update(process.env.PEPPER + args).digest('hex')
     return await verificationDB.findAll({
         where: {
             hash: rehash,
