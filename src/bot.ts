@@ -159,6 +159,9 @@ function changeRole(message: Message, user: User, emojiName: string, addRole: bo
     const role = react_to_role(message.guild, emojiName)
     if (role) {
         const member = message.guild.members.resolve(user)
+        if (member == null) {
+            return
+        }
         if (addRole) {
             member.roles.add(role)
         } else {
