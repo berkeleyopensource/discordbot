@@ -21,8 +21,7 @@ const transporter = nodemailer.createTransport({
  * @returns whether the send was successful
  */
 export async function sendCode(user: User, email: string): Promise<boolean> {
-    let code = new Date().getTime() % 1000000
-    code = code < 1000000 ? code + 1000000 : code
+    let code = Math.floor(Math.random() * 1000000)
     const query = await queryEmail(email)
     if (query.length) {
         return false

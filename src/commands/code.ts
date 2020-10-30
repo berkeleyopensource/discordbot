@@ -13,6 +13,7 @@ export class CodeCommand extends EECSCommand {
             hidden: true,
             dmOnly: true,
             unverifiedOnly: true,
+            throttleTime: 15,
         })
     }
 

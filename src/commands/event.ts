@@ -81,7 +81,7 @@ export class EventCommand extends EECSCommand {
             await sent.delete()
             let response: string
             try {
-                response = collection.first().content
+                response = collection.first().content.toLowerCase()
             } catch (error) {
                 return message.say('> No response for a prompt. Event creation stopped!')
             }
@@ -146,7 +146,7 @@ export class EventCommand extends EECSCommand {
         const ANNOUNCEMENTS_CHANNEL = client.channels.resolve(process.env.ANNOUNCEMENTS_CHANNEL_ID) as TextChannel
         let announcement = await ANNOUNCEMENTS_CHANNEL.send(embed)
         if (fields.has('rm')) {
-            let mention = await ANNOUNCEMENTS_CHANNEL.send(rmMessage)
+            let mention = await ANNOUNCEMENTS_CHANNEL.send(rmMessage.content)
             await mention.react('☑️')
             await mention.react('🔘')
         } else {
