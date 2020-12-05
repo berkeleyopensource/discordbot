@@ -42,7 +42,7 @@ export default class EECSCommand extends Command {
         if (!member) {
             return message.say(
                 '> You were not found in the server cache.\n' +
-                    '> Please speak in or rejoin the EECS Discord server before using any commands.'
+                    '> Please speak in or rejoin the server before using any commands.'
             )
         }
 

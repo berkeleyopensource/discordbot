@@ -32,7 +32,8 @@ export class CodeCommand extends EECSCommand {
                     title: 'Verification Successful',
                     description:
                         `User \`${message.author.tag}\` has been verified.\n` +
-                        'Please flair your status and pick the classes you want to see in `#roles`',
+                        'Please flair your status and pick the classes you want to see in `#roles`\n' +
+                        'If you plan on leaving and rejoining at a later date, please ping a mod to let us know!',
                     color: 0xfdb515,
                 })
             )
