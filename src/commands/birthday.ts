@@ -25,6 +25,14 @@ export class SetBirthdayCommand extends EECSCommand {
         const birthday = moment(`2020-${args}`, this.DATEFORMS.map(form => `YYYY-${form}`), true); //2020 to account for leap year bdays
 
         if (birthday.isValid()) {
+            await birthdayDB.upsert({
+                user_id: message.author.id,
+                birth_month: birthday.month(),
+                birth_day: birthday.date()
+            }, {
+                validate: true
+            })
+            
             return scheduleBirthday(birthday.month(), birthday.date(), message.author.id).then(
                 () => message.say(`Your birthday has been recorded as ${birthday.format("MMMM Do")}!`),
                 (err) => {

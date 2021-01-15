@@ -2,7 +2,9 @@ import * as dotenv from 'dotenv'
 import * as path from 'path'
 import classMappings from './classMappings'
 import { CommandoClient } from 'discord.js-commando'
-import { emoteDB, emoteDBFull } from './sequelizeDB'
+import { emoteDB, emoteDBFull, birthdayDB } from './sequelizeDB'
+import { scheduleBirthday } from './scheduleBirthdays'
+import * as Sequelize from 'sequelize'
 import {
     Guild,
     Role,
@@ -44,6 +46,7 @@ let guildEmojis: Collection<string, GuildEmoji>
 
 client.once('ready', async () => {
     const updated = await updateEmojiDB()
+    const scheduled = await scheduleAllBirthdays()
     console.log('\x1b[36m%s\x1b[0m', 'bot active!')
 })
 
@@ -201,4 +204,9 @@ export async function updateEmojiDB() {
     }
     console.log('Emote database updated: ', updated)
     return updated
+}
+
+export async function scheduleAllBirthdays() {
+    const query = await birthdayDB.findAll()
+    query.forEach((entry : any) => scheduleBirthday(entry.birth_month, entry.birth_day, entry.user_id))
 }
