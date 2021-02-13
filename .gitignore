@@ -1,5 +1,5 @@
 .env
-nodemon.json
+.nvmrc
 node_modules
 .DS_Store
 dist/
