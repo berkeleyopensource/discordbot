@@ -1,9 +1,9 @@
 import EECSCommand from '../EECSCommand'
 import { CommandoClient, CommandoMessage } from 'discord.js-commando'
 import { scheduleBirthday } from '../scheduleBirthdays'
-import { seq, birthdayDB } from '../sequelizeDB'
+import { birthdayDB } from '../sequelizeDB'
+import { Message } from 'discord.js'
 import * as moment from 'moment'
-import * as sequelize from 'sequelize'
 
 export class SetBirthdayCommand extends EECSCommand {
     constructor(client: CommandoClient) {
@@ -12,7 +12,7 @@ export class SetBirthdayCommand extends EECSCommand {
             group: 'fun',
             memberName: 'setbday',
             description: 'sets your birthday',
-            adminOnly: true
+            throttleTime: 15,
         })
     }
 
@@ -25,23 +25,46 @@ export class SetBirthdayCommand extends EECSCommand {
         const birthday = moment(`2020-${args}`, this.DATEFORMS.map(form => `YYYY-${form}`), true); //2020 to account for leap year bdays
 
         if (birthday.isValid()) {
-            await birthdayDB.upsert({
-                user_id: message.author.id,
-                birth_month: birthday.month(),
-                birth_day: birthday.date()
-            }, {
-                validate: true
-            })
+
+            await message.direct(`> Your Birthday was recorded as: \`${birthday.format("MMMM Do")}\``)
+            const confirmMessage = (await message.direct('> Does this look good?')) as Message
+            await confirmMessage.react('👍')
+            await confirmMessage.react('👎')
+            confirmMessage
+                .awaitReactions(
+                    (reaction, user) =>
+                        user.id === message.author.id && (reaction.emoji.name === '👍' || reaction.emoji.name === '👎'),
+                    { max: 1, time: 10000 }
+                )
+                .then(async collection => {
+                    if (collection.first().emoji.name === '👍') {
+                        await birthdayDB.upsert({
+                            user_id: message.author.id,
+                            birth_month: birthday.month(),
+                            birth_day: birthday.date()
+                        }, {
+                            validate: true
+                        })
+                        confirmMessage.delete()
+                        return scheduleBirthday(birthday.month(), birthday.date(), message.author.id).then(
+                            () => (message.react('👍')),
+                            (err) => {
+                                console.log(err)
+                                return message.direct('There was an issue scheduling your birthday. Try again later.')
+                            }
+                        )
+                    } else {
+                        confirmMessage.delete()
+                        return message.say('> Birthday scheduling cancelled.')
+                    }
+                })
+                .catch(() => {
+                    confirmMessage.delete()
+                    return message.say('> No response, birthday scheduling canceled.')
+                })
             
-            return scheduleBirthday(birthday.month(), birthday.date(), message.author.id).then(
-                () => message.say(`Your birthday has been recorded as ${birthday.format("MMMM Do")}!`),
-                (err) => {
-                    console.log(err)
-                    return message.say('There was an issue scheduling your birthday. Try again later.')
-                }
-            )
         } else {
-            return message.say('Enter a Valid MM-DD Date.')
+            return message.say('> Enter a Valid \`MM-DD\` Date.')
         }
     }
 }

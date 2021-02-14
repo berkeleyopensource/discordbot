@@ -18,23 +18,14 @@ export async function scheduleBirthday(birthmonth: number, birthday: number, use
 
 async function celebrateBirthday(user: User) {
     const embed = {
-        title: 'Happy Birthday!' ,
+        title: 'Happy Birthday! 🎂' ,
         color: 0xff9900,
         description: `Please wish a happy birthday to <@!${user.id}>!`,
-        image: {
-            url: 'attachment://bdaycake.jpg'
-        },
         thumbnail: {
             url: `https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}`
         }
     }
     
-    const ANNOUNCEMENTS_CHANNEL = client.channels.resolve(process.env.ANNOUNCEMENTS_CHANNEL_ID) as TextChannel
-    return ANNOUNCEMENTS_CHANNEL.send({
-        embed,
-        files: [{
-            attachment: './img/bdaycake.jpg',
-            name: 'bdaycake.jpg'
-        }]
-    })
+    const OUTPUT_CHANNEL = client.channels.resolve(process.env.OUTPUT_CHANNEL_ID) as TextChannel
+    return OUTPUT_CHANNEL.send({embed})
 }
