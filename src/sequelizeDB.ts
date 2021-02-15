@@ -37,10 +37,10 @@ emoteDBFull.removeAttribute('id')
 export const birthdayDB: any = seq.define('birthdays', {
     user_id: {
         primaryKey: true,
-        type: Sequelize.TEXT
+        type: Sequelize.TEXT,
     },
     birth_month: Sequelize.INTEGER,
-    birth_day: Sequelize.INTEGER
+    birth_day: Sequelize.INTEGER,
 })
 
 birthdayDB.removeAttribute('id')

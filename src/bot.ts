@@ -75,7 +75,7 @@ client.on('message', async message => {
 client.on('messageReactionAdd', async (messageReaction, user) => {
     if (user.bot || !messageReaction.message.guild || messageReaction.message.guild.id != process.env.GUILD_ID) return
     if (MESSAGE_IDS.includes(messageReaction.message.id)) {
-        return changeRole(messageReaction.message, user, messageReaction.emoji.name, true)
+        return changeRole(messageReaction.message, user as User, messageReaction.emoji.name, true)
     }
     if (guildEmojis.has(messageReaction.emoji.id)) {
         await emoteDB.create({
@@ -88,11 +88,12 @@ client.on('messageReactionAdd', async (messageReaction, user) => {
 client.on('messageReactionRemove', (messageReaction, user) => {
     if (user.bot || messageReaction.message.guild.id != process.env.GUILD_ID) return
     if (MESSAGE_IDS.includes(messageReaction.message.id)) {
-        return changeRole(messageReaction.message, user, messageReaction.emoji.name, false)
+        return changeRole(messageReaction.message, user as User, messageReaction.emoji.name, false)
     }
 })
 
 client.on(
+    // @ts-ignore
     'raw',
     (packet: {
         t: string
@@ -208,5 +209,5 @@ export async function updateEmojiDB() {
 
 export async function scheduleAllBirthdays() {
     const query = await birthdayDB.findAll()
-    query.forEach((entry : any) => scheduleBirthday(entry.birth_month, entry.birth_day, entry.user_id))
+    query.forEach((entry: any) => scheduleBirthday(entry.birth_month, entry.birth_day, entry.user_id))
 }
