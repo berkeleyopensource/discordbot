@@ -34,9 +34,21 @@ export const emoteDBFull: any = seq.define('emotes_full', {
 })
 emoteDBFull.removeAttribute('id')
 
+export const birthdayDB: any = seq.define('birthdays', {
+    user_id: {
+        primaryKey: true,
+        type: Sequelize.TEXT,
+    },
+    birth_month: Sequelize.INTEGER,
+    birth_day: Sequelize.INTEGER,
+})
+
+birthdayDB.removeAttribute('id')
+
 verificationDB.sync().then(console.log('User database synced!'))
 emoteDB.sync().then(console.log('Weekly emote database synced!'))
 emoteDBFull.sync().then(console.log('Full emote database synced!'))
+birthdayDB.sync().then(console.log('Birthday database synced!'))
 
 const job = new CronJob(process.env.CRON_TIMING, async () => {
     const LOG_CHANNEL = client.channels.resolve(process.env.LOG_CHANNEL_ID) as TextChannel
