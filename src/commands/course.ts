@@ -113,7 +113,7 @@ export class CourseCommand extends EECSCommand {
     }
 
     getCatalog() {
-        return fetch('https://www.berkeleytime.com/api/catalog/catalog_json/')
+        return fetch('https://berkeleytime.com/api/catalog/catalog_json/')
             .then(response => response.json())
             .then(data => {
                 let newCatalog: { [key: string]: { [key: string]: number } } = {}
@@ -171,7 +171,7 @@ export class CourseCommand extends EECSCommand {
                 new MessageEmbed({
                     title: `${abbrev} ${courseNum}`,
                     description: data['course']['title'],
-                    url: `https://www.berkeleytime.com/catalog/${abbrev}/${courseNum}/`.replace(' ', '%20'),
+                    url: `https://berkeleytime.com/catalog/${abbrev}/${courseNum}/`.replace(' ', '%20'),
                     color: 0x003262,
                     thumbnail: {
                         url: 'https://brand.berkeley.edu/wp-content/uploads/2016/10/ucbseal_139_540.png',
