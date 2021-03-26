@@ -31,13 +31,13 @@ export async function unscheduleBirthday(userID: string) {
 async function celebrateBirthday(user: User) {
     const embed = {
         title: 'Happy Birthday! 🎂',
-        color: 0xff9900,
+        color: 0xfdb515,
         description: `Please wish a happy birthday to <@!${user.id}>!`,
         thumbnail: {
             url: `https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}`,
         },
     }
 
-    const OUTPUT_CHANNEL = client.channels.resolve(process.env.OUTPUT_CHANNEL_ID) as TextChannel
+    const OUTPUT_CHANNEL = client.channels.resolve(process.env.STDOUT_CHANNEL_ID) as TextChannel
     return OUTPUT_CHANNEL.send({ embed })
 }
