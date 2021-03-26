@@ -1,31 +1,17 @@
 import * as dotenv from 'dotenv'
 import * as path from 'path'
-import classMappings from './classMappings'
 import { CommandoClient } from 'discord.js-commando'
 import { emoteDB, emoteDBFull, birthdayDB } from './sequelizeDB'
 import { scheduleBirthday } from './scheduleBirthdays'
 import * as Sequelize from 'sequelize'
 import {
-    Guild,
-    Role,
     TextChannel,
     MessageReaction,
-    Message,
-    User,
-    MessageEmbed,
     Collection,
     GuildEmoji,
 } from 'discord.js'
 
 dotenv.config()
-
-const MESSAGE_IDS: string[] = [
-    process.env.MESSAGE_STATUS,
-    process.env.MESSAGE_ALL,
-    process.env.MESSAGE_EECS_LD,
-    process.env.MESSAGE_CS_UD,
-    process.env.MESSAGE_EE_UD,
-]
 
 export const client = new CommandoClient({ commandPrefix: process.env.PREFIX })
 
@@ -74,21 +60,11 @@ client.on('message', async message => {
 
 client.on('messageReactionAdd', async (messageReaction, user) => {
     if (user.bot || !messageReaction.message.guild || messageReaction.message.guild.id != process.env.GUILD_ID) return
-    if (MESSAGE_IDS.includes(messageReaction.message.id)) {
-        return changeRole(messageReaction.message, user as User, messageReaction.emoji.name, true)
-    }
     if (guildEmojis.has(messageReaction.emoji.id)) {
         await emoteDB.create({
             emoji_name: messageReaction.emoji.name,
             timestamp: Date.now(),
         })
-    }
-})
-
-client.on('messageReactionRemove', (messageReaction, user) => {
-    if (user.bot || !messageReaction.message.guild || messageReaction.message.guild.id != process.env.GUILD_ID) return
-    if (MESSAGE_IDS.includes(messageReaction.message.id)) {
-        return changeRole(messageReaction.message, user as User, messageReaction.emoji.name, false)
     }
 })
 
@@ -158,31 +134,6 @@ client.on('emojiUpdate', async (oldEmoji, newEmoji) => {
         count: 0,
     })
 })
-
-function changeRole(message: Message, user: User, emojiName: string, addRole: boolean) {
-    const role = react_to_role(message.guild, emojiName)
-    if (role) {
-        const member = message.guild.members.resolve(user)
-        if (member == null) {
-            return
-        }
-        if (addRole) {
-            member.roles.add(role)
-        } else {
-            member.roles.remove(role)
-        }
-        console.log('\x1b[36m%s\x1b[0m', `${user.tag}: ${addRole ? 'Added ' : 'Removed '}role ${role.name}`)
-    }
-}
-
-function react_to_role(guild: Guild, react_name: string): Role {
-    for (let division in classMappings) {
-        if (Object.keys(classMappings[division]).includes(react_name)) {
-            return guild.roles.cache.find(role => role.name === classMappings[division][react_name])
-        }
-    }
-    return null
-}
 
 export async function updateEmojiDB() {
     guildEmojis = client.guilds.resolve(process.env.GUILD_ID).emojis.cache

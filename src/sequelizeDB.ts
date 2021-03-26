@@ -51,7 +51,7 @@ emoteDBFull.sync().then(console.log('Full emote database synced!'))
 birthdayDB.sync().then(console.log('Birthday database synced!'))
 
 const job = new CronJob(process.env.CRON_TIMING, async () => {
-    const LOG_CHANNEL = client.channels.resolve(process.env.LOG_CHANNEL_ID) as TextChannel
+    const STDOUT_CHANNEL = client.channels.resolve(process.env.STDOUT_CHANNEL_ID) as TextChannel
     const query = await emoteDB.findAll({
         group: 'emoji_name',
         attributes: [
@@ -74,7 +74,7 @@ const job = new CronJob(process.env.CRON_TIMING, async () => {
                         const before = result.count
                         result.update({ count: result.count + row.count })
                         if (limit < 10) {
-                            const emoji = LOG_CHANNEL.guild.emojis.cache.find(e => e.name === row.name)
+                            const emoji = STDOUT_CHANNEL.guild.emojis.cache.find(e => e.name === row.name)
                             countContents += (emoji ? emoji.toString() : '') + ` \`${before} => ${result.count}\`\n`
                             limit++
                         }
@@ -91,7 +91,7 @@ const job = new CronJob(process.env.CRON_TIMING, async () => {
     emoteDB.sync({ force: true }).then(console.log('Weekly emote database cleaned!'))
     console.log('Full emote database counts updated!')
     await updateEmojiDB()
-    return LOG_CHANNEL.send(
+    return STDOUT_CHANNEL.send(
         new MessageEmbed({
             title: 'Full emote database updated + weekly emote database cleaned!',
             color: 0x003262,
