@@ -8,13 +8,29 @@ dotenv.config()
 
 let codes: { [key: string]: [number, string] } = {}
 
-const transporter = nodemailer.createTransport({
-    service: 'gmail',
-    auth: {
-        user: process.env.EMAIL_USER || '',
-        pass: process.env.EMAIL_PASS || '',
-    },
-})
+let transporter: nodemailer.Transporter
+
+export async function initializeNodemailer() {
+    transporter = nodemailer.createTransport({
+        service: 'gmail',
+        auth: {
+            user: process.env.EMAIL_USER || '',
+            pass: process.env.EMAIL_PASS || '',
+        },
+    })
+
+    await new Promise((resolve, reject) => {
+        transporter.verify(error => {
+            if (error) {
+                console.log(error)
+                return reject(error)
+            } else {
+                console.log('Successfully connected email!')
+                resolve(true)
+            }
+        })
+    })
+}
 
 /**
  * Generates, stores, and sends a verification code to the email

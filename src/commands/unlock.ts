@@ -10,7 +10,7 @@ export class LockCommand extends EECSCommand {
             memberName: 'unlock',
             description: 'unlocks a channel',
             hidden: true,
-            adminOnly: true
+            adminOnly: true,
         })
     }
 
@@ -33,7 +33,7 @@ export class LockCommand extends EECSCommand {
         const embed = {
             title: `Lock Released`,
             color: 0x003262,
-            description: `__**Resource:**__ ${match[0]}`
+            description: `__**Resource:**__ ${match[0]}`,
         }
 
         const confirmEmbed = await message.say({ embed })
@@ -64,12 +64,11 @@ export class LockCommand extends EECSCommand {
                 confirmMessage.delete()
                 return message.say('> No response, unlocking cancelled.')
             })
-
     }
 
     async lock_release(po: PermissionOverwrites, channel: TextChannel) {
         if (po) {
-            po.update({SEND_MESSAGES: null})
+            po.update({ SEND_MESSAGES: null })
         }
     }
 }

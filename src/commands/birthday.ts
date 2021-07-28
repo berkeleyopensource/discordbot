@@ -1,9 +1,9 @@
-import EECSCommand from '../EECSCommand'
-import { CommandoClient, CommandoMessage } from 'discord.js-commando'
-import { scheduleBirthday, unscheduleBirthday } from '../scheduleBirthdays'
-import { birthdayDB } from '../sequelizeDB'
-import { Message } from 'discord.js'
 import * as moment from 'moment'
+import EECSCommand from '../EECSCommand'
+import { birthdayDB } from '../sequelizeDB'
+import { CommandoClient, CommandoMessage } from 'discord.js-commando'
+import { Message } from 'discord.js'
+import { scheduleBirthday, unscheduleBirthday } from '../scheduleBirthdays'
 
 export class SetBirthdayCommand extends EECSCommand {
     constructor(client: CommandoClient) {

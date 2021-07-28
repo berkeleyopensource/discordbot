@@ -1,6 +1,6 @@
-import { TextChannel, User } from 'discord.js'
 import { client } from './bot'
 import { CronJob } from 'cron'
+import { TextChannel, User } from 'discord.js'
 
 const birthdayJobs: { [userID: string]: CronJob } = {}
 

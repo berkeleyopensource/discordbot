@@ -10,7 +10,7 @@ export class LockCommand extends EECSCommand {
             memberName: 'lock',
             description: 'locks a channel',
             hidden: true,
-            adminOnly: true
+            adminOnly: true,
         })
     }
 
@@ -34,7 +34,8 @@ export class LockCommand extends EECSCommand {
         const embed = {
             title: `Lock Acquired`,
             color: 0xfdb515,
-            description: `__**Resource:**__ ${match[0]}` +
+            description:
+                `__**Resource:**__ ${match[0]}` +
                 (words.length > 1 ? `\n\n__**Reason:**__ ${words.slice(1).join(' ')}` : ''),
         }
 
@@ -70,9 +71,9 @@ export class LockCommand extends EECSCommand {
 
     async lock_acquire(po: PermissionOverwrites, channel: TextChannel) {
         if (po) {
-            po.update({SEND_MESSAGES: false})
+            po.update({ SEND_MESSAGES: false })
         } else {
-            channel.overwritePermissions([{id: process.env.EVERYONE_ROLE_ID, deny: ['SEND_MESSAGES']}])
+            channel.overwritePermissions([{ id: process.env.EVERYONE_ROLE_ID, deny: ['SEND_MESSAGES'] }])
         }
     }
 }

@@ -1,15 +1,11 @@
 import * as dotenv from 'dotenv'
 import * as path from 'path'
-import { CommandoClient } from 'discord.js-commando'
-import { emoteDB, emoteDBFull, birthdayDB } from './sequelizeDB'
-import { scheduleBirthday } from './scheduleBirthdays'
 import * as Sequelize from 'sequelize'
-import {
-    TextChannel,
-    MessageReaction,
-    Collection,
-    GuildEmoji,
-} from 'discord.js'
+import { birthdayDB, emoteDB, emoteDBFull } from './sequelizeDB'
+import { Collection, GuildEmoji, MessageReaction, TextChannel } from 'discord.js'
+import { CommandoClient } from 'discord.js-commando'
+import { initializeNodemailer } from './verification'
+import { scheduleBirthday } from './scheduleBirthdays'
 
 dotenv.config()
 
@@ -33,6 +29,7 @@ let guildEmojis: Collection<string, GuildEmoji>
 client.once('ready', async () => {
     const updated = await updateEmojiDB()
     const scheduled = await scheduleAllBirthdays()
+    const initialized = await initializeNodemailer()
     console.log('\x1b[36m%s\x1b[0m', 'bot active!')
 })
 
