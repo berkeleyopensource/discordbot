@@ -2,6 +2,9 @@
  <img src="icon.png" alt="train_perf_fig" height="100" width="100"/>
 </p>
 
+# Deprecated
+eecsbot has been rewritten and moved [here](https://github.com/eecsdiscord/eecsbot)
+
 # eecsBot
 Discord Bot for the Berkeley EECS Discord server
 
