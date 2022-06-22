@@ -27,7 +27,7 @@
     "node-fetch": "^2.6.1",
     "nodemailer": "^6.6.3",
     "sequelize": "^6.6.5",
-    "sqlite3": "^5.0.2"
+    "sqlite3": "^5.0.3"
   },
   "devDependencies": {
     "@types/cron": "^1.7.3",
